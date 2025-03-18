@@ -6,7 +6,8 @@ import tailwindcss from '@tailwindcss/vite';
 
 export default defineConfig({
   test: {
-    environment: 'jsdom'
+    environment: 'jsdom',
+    globals: true
   },
   plugins: [vue(), VitePWA({
     registerType: 'prompt',

@@ -1,2 +1,34 @@
-@import "tailwindcss";
+@import 'tailwindcss';
 @plugin "daisyui";
+
+.unselectable {
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}
+
+.player2 {
+  transform: rotate(180deg);
+}
+
+.divider-container {
+  @apply relative;
+  height: calc(0.25rem * 0.5);
+  @apply w-full;
+  background-color: color-mix(in oklab, var(--color-base-content) 10%, transparent);
+}
+
+.scramble {
+  @apply mx-3;
+  @apply text-center;
+}
+
+.time {
+  @apply text-center;
+  @apply text-3xl;
+}
+
+.stats {
+  @apply text-center;
+}

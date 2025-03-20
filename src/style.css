@@ -19,16 +19,18 @@
   background-color: color-mix(in oklab, var(--color-base-content) 10%, transparent);
 }
 
+.score {
+  @apply text-center;
+  @apply text-3xl;
+}
+
 .scramble {
   @apply mx-3;
+  @apply text-xl;
   @apply text-center;
 }
 
 .time {
   @apply text-center;
-  @apply text-3xl;
-}
-
-.stats {
-  @apply text-center;
+  @apply text-5xl;
 }

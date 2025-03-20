@@ -41,12 +41,13 @@ function collapseLeave(el: Element) {
       <div class="scramble">R' U' F U2 B2 D' R2 D R2 B2 U B2 D' B R' U2 F2 R2 B L F2 D2 U' R' U' F</div>
       <div class="time">0.000</div>
       <div id="stats-box" class="relative">
-        <div class="bg-base-300 p-2 invisible">STATS</div>
-        <div class="bg-base-300 p-2 absolute bottom-0 left-0 w-full z-10" @click.stop="toggleStats">
+        <div class="bg-base-300 p-3 invisible">STATS</div>
+        <div class="bg-base-300 p-3 absolute bottom-0 left-0 w-full z-10" @click.stop="toggleStats">
           <div class="text-center font-bold">STATS</div>
           <Transition name="stats-collapse" @before-enter="collapseBeforeEnter" @enter="collapseEnter"
             @leave="collapseLeave">
             <div @click.stop="closeOpenedStats" v-if="statsOpen" class="">
+              <div class="divider my-1"></div>
               <div class="mt-2 text-left grid grid-flow-col grid-rows-3 gap-1">
                 <div>avg5</div>
                 <div>avg12</div>

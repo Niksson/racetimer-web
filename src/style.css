@@ -34,3 +34,25 @@
   @apply text-center;
   @apply text-5xl;
 }
+
+#stats-box {
+  transition: all 0.2s;
+}
+
+/* Fade and Height Transition */
+.stats-collapse-enter-active,
+.stats-collapse-leave-active {
+  transition: height 0.3s ease, opacity 0.3s ease;
+}
+
+.stats-collapse-enter-from,
+.stats-collapse-leave-to {
+  opacity: 0;
+  height: 0;
+}
+
+.stats-collapse-enter-to,
+.stats-collapse-leave-from {
+  opacity: 1;
+  height: auto;
+}

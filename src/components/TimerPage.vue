@@ -3,7 +3,7 @@ import PlayerView from './PlayerView.vue';
 </script>
 
 <template>
-  <div id="page-container" class="unselectable grid grid-rows-[1fr_auto_1fr] h-screen">
+  <div id="timer-page" class="unselectable grid grid-rows-[1fr_auto_1fr] h-screen w-full">
     <PlayerView class="player2" />
     <div class="divider-custom">
       <div class="divider-content absolute w-full -top-5 flex justify-between">

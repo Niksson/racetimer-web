@@ -13,4 +13,11 @@ const router = createRouter({
   ]
 })
 
+router.afterEach((to, from) => {
+  const toDepth = to.path.split('/').filter((fragment) => fragment.length !== 0).length
+  const fromDepth = from.path.split('/').filter((fragment) => fragment.length !== 0).length
+  to.meta.transition =
+    toDepth < fromDepth ? 'route-transition-slide-right' : 'route-transition-slide-left'
+})
+
 createApp(App).use(router).mount('#app')

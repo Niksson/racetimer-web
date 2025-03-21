@@ -1,6 +1,18 @@
 @import 'tailwindcss';
 @plugin "daisyui";
 
+#app {
+  position: relative;
+}
+
+#solves-page,
+#timer-page {
+  position: absolute;
+  left: 0;
+  top: 0;
+  @apply bg-base-100;
+}
+
 .unselectable {
   -webkit-user-select: none;
   -moz-user-select: none;
@@ -43,4 +55,36 @@
 .btn {
   @apply shadow-lg;
   @apply shadow-base-300;
+}
+
+.route-transition-slide-left-enter-active,
+.route-transition-slide-left-leave-active,
+.route-transition-slide-right-enter-active,
+.route-transition-slide-right-leave-active {
+  transition: all 0.25s ease;
+}
+
+.route-transition-slide-left-enter-active,
+.route-transition-slide-right-leave-active {
+  @apply shadow-md;
+  @apply shadow-base-300;
+  z-index: 20;
+}
+.route-transition-slide-left-leave-active,
+.route-transition-slide-right-enter-active {
+  z-index: 10;
+}
+
+.route-transition-slide-left-enter-from {
+  transform: translateX(100%);
+}
+.route-transition-slide-left-leave-to {
+  transform: translateX(-33%);
+}
+
+.route-transition-slide-right-enter-from {
+  transform: translateX(-33%);
+}
+.route-transition-slide-right-leave-to {
+  transform: translateX(100%);
 }

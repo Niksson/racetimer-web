@@ -12,11 +12,11 @@
   transform: rotate(180deg);
 }
 
-.divider-container {
+.divider-custom {
   @apply relative;
-  height: calc(0.25rem * 0.5);
+  @apply h-1;
   @apply w-full;
-  background-color: color-mix(in oklab, var(--color-base-content) 10%, transparent);
+  @apply bg-neutral-600;
 }
 
 .score {
@@ -38,4 +38,9 @@
 .stats-collapse-enter-active,
 .stats-collapse-leave-active {
   transition: all 0.1s ease;
+}
+
+.btn {
+  @apply shadow-lg;
+  @apply shadow-base-300;
 }

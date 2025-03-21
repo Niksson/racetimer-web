@@ -16,7 +16,9 @@ const range: number[] = [...Array(100).keys()];
     </div>
     <div class="divider-custom">
       <div class="divider-content absolute w-full -top-5 flex justify-end">
-        <button class="mr-3 text-xl h-10 btn btn-outline bg-base-100">TIMER</button>
+        <RouterLink replace to="/" v-slot="{ navigate }">
+          <button @click="navigate" class="mr-3 text-xl h-10 btn btn-outline bg-base-100">TIMER</button>
+        </RouterLink>
       </div>
     </div>
     <div class="flex flex-col overflow-hidden">

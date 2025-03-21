@@ -53,7 +53,9 @@ function collapseLeave(el: Element) {
             <div>avg100</div>
             <div>solves: 0/0</div>
           </div>
-          <button @click.stop="() => { }" class="w-full btn mt-2">SOLVES</button>
+          <RouterLink to="/solves" custom v-slot="{ navigate }">
+            <button @click.stop="navigate" class="w-full btn mt-2">SOLVES</button>
+          </RouterLink>
         </div>
       </Transition>
     </div>

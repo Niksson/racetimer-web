@@ -12,7 +12,13 @@ export default defineConfig({
     include: ['tests/**/*.test.ts']
   },
   plugins: [
-    vue(),
+    vue({
+      template: {
+        compilerOptions: {
+          isCustomElement: (tag) => tag === 'scramble-display'
+        }
+      }
+    }),
     VueDevTools(),
     VitePWA({
       registerType: 'prompt',

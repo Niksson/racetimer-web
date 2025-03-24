@@ -2,20 +2,17 @@
 import { ref } from 'vue'
 import { ChevronUp, ChevronDown } from 'lucide-vue-next'
 
-const collapseOpen = ref(false)
+const isOpen = ref(false)
 function close() {
-  if (collapseOpen.value)
-    collapseOpen.value = false
-}
-function open() {
-  collapseOpen.value = true
+  if (isOpen.value)
+    isOpen.value = false
 }
 function toggle() {
-  collapseOpen.value = !collapseOpen.value
+  isOpen.value = !isOpen.value
 }
 
 defineExpose({
-  close, open, toggle
+  close, isOpen
 })
 
 function collapseBeforeEnter(el: Element) {
@@ -38,12 +35,12 @@ function collapseLeave(el: Element) {
     <div class="bg-base-300 p-3 invisible">STATS</div>
     <div class="bg-base-300 p-3 absolute bottom-0 left-0 w-full z-10" @click.stop="toggle">
       <div class="text-center font-bold">STATS
-        <ChevronUp class="inline" v-if="!collapseOpen" />
+        <ChevronUp class="inline" v-if="!isOpen" />
         <ChevronDown class="inline" v-else />
       </div>
       <Transition name="stats-collapse" @before-enter="collapseBeforeEnter" @enter="collapseEnter"
         @leave="collapseLeave">
-        <div @click.stop="close" v-if="collapseOpen">
+        <div @click.stop="close" v-if="isOpen">
           <div class=" divider my-1" />
           <div class="mt-2 text-left grid grid-flow-col grid-rows-3 gap-1">
             <div>avg5</div>

@@ -18,7 +18,7 @@ function togglePenalty(player: Side, penalty: Penalty | null) {
 
 <template>
   <div id="timer-page" class="unselectable grid grid-rows-[1fr_auto_1fr] h-screen w-full">
-    <PlayerView @scramble-clicked="openScrambleModal" :scramble="scramble" class="player2" />
+    <PlayerView id="player2" @scramble-clicked="openScrambleModal" :scramble="scramble" class="player2" />
     <div class="divider-custom">
       <div class="divider-content absolute w-full -top-5 flex justify-between">
         <button class="ml-8 w-24 text-xl h-10 btn btn-outline bg-base-100">PUZZLES</button>
@@ -26,7 +26,7 @@ function togglePenalty(player: Side, penalty: Penalty | null) {
           @click="penaltyModal?.modal?.showModal()">PENALTY</button>
       </div>
     </div>
-    <PlayerView @scramble-clicked="openScrambleModal" :scramble="scramble" />
+    <PlayerView id="player1" @scramble-clicked="openScrambleModal" :scramble="scramble" />
     <TwoSideModal ref="scramble-modal">
       <template #modal-content>
         <div class="flex place-content-center">

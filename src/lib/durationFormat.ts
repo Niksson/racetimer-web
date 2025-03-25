@@ -9,15 +9,18 @@ export function formatDuration(millis: number): string {
   const parts: string[] = []
 
   const days = duration.days()
-  if (days) parts.push(duration.format('DD:'))
+  if (days) parts.push(duration.format('D:'))
 
   const hours = duration.hours()
-  if (days || hours) parts.push(duration.format('HH:'))
+  const hoursFormat = days ? 'HH:' : 'H:'
+  if (days || hours) parts.push(duration.format(hoursFormat))
 
   const minutes = duration.minutes()
-  if (days || hours || minutes) parts.push(duration.format('mm:'))
+  const minutesFormat = days || hours ? 'mm:' : 'm:'
+  if (days || hours || minutes) parts.push(duration.format(minutesFormat))
 
-  parts.push(duration.format('ss.SSS'))
+  const secondsFormat = days || hours || minutes ? 'ss.SSS' : 's.SSS'
+  parts.push(duration.format(secondsFormat))
 
   return parts.join('')
 }

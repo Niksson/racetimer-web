@@ -22,8 +22,8 @@ export function createStatsContext(schema: StatsSchema): StatsContext {
   }
 }
 
-export function computeStats(context: StatsContext, newResult: StatsResult): ComputedStats {
-  const allResults = [...context.results, newResult]
+export function computeStats(context: StatsContext): ComputedStats {
+  const [newResult] = context.results.slice(-1)
   const newComputedStats = {} as ComputedStats
   for (const key in context.schema) {
     const item = context.schema[key]
@@ -32,9 +32,9 @@ export function computeStats(context: StatsContext, newResult: StatsResult): Com
     if (item.metric === 'single') {
       computed = newResult
     } else if (item.metric === 'mean') {
-      computed = computeMean(item, allResults)
+      computed = computeMean(item, context.results)
     } else if (item.metric === 'average') {
-      computed = computeAverage(item, allResults)
+      computed = computeAverage(item, context.results)
     }
     newComputedStats[key] = selectBestOrWorst(item, computed, previous)
   }

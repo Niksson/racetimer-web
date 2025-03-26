@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { ref } from 'vue'
 import { ChevronUp, ChevronDown } from 'lucide-vue-next'
+import StatsList from './StatsList.vue'
 
 const isOpen = ref(false)
 function close() {
@@ -28,6 +29,14 @@ function collapseLeave(el: Element) {
   (el as HTMLElement).style.overflow = 'hidden';
 }
 
+const dummyStats = {
+  'avg5': 10353,
+  'avg12': 10353,
+  'avg25': 10353,
+  'avg50': 10353,
+  'avg100': 10353,
+}
+
 </script>
 
 <template>
@@ -42,14 +51,7 @@ function collapseLeave(el: Element) {
         @leave="collapseLeave">
         <div @click.stop="close" v-if="isOpen">
           <div class=" divider my-1" />
-          <div class="mt-2 text-left grid grid-flow-col grid-rows-3 gap-1">
-            <div>avg5</div>
-            <div>avg12</div>
-            <div>avg25</div>
-            <div>avg50</div>
-            <div>avg100</div>
-            <div>solves: 0/0</div>
-          </div>
+          <StatsList :stats="dummyStats" :successful-solves="5" :total-solves="6" />
           <RouterLink to="/solves" custom v-slot="{ navigate }">
             <button @click.stop="navigate" class="w-full btn mt-2">SOLVES</button>
           </RouterLink>

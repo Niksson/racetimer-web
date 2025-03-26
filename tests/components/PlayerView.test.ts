@@ -7,7 +7,7 @@ describe('PlayerView', () => {
     const scramble = "R U R' U'"
 
     const wrapper = mount(PlayerView, {
-      props: { scramble },
+      props: { scramble, id: 'player1' },
       global: { stubs: { StatsCollapse: true } }
     })
 
@@ -17,7 +17,7 @@ describe('PlayerView', () => {
   test('player view emits when scramble is clicked', () => {
     const scramble = "R U R' U'"
     const wrapper = shallowMount(PlayerView, {
-      props: { scramble },
+      props: { scramble, id: 'player1' },
       global: { stubs: { StatsCollapse: StatsCollapse } }
     })
 
@@ -30,7 +30,7 @@ describe('PlayerView', () => {
   test('player view emits on scramble click when stats child component does not have needed properties', () => {
     const scramble = "R U R' U'"
     const wrapper = shallowMount(PlayerView, {
-      props: { scramble },
+      props: { scramble, id: 'player1' },
       global: { stubs: { StatsCollapse: {} } }
     })
 
@@ -43,7 +43,7 @@ describe('PlayerView', () => {
   test('player view does not emit on scramble click when stats are open', () => {
     const scramble = "R U R' U'"
     const wrapper = mount(PlayerView, {
-      props: { scramble },
+      props: { scramble, id: 'player1' },
       global: { stubs: { StatsCollapse: StatsCollapse } }
     })
     const statsCollapse = wrapper.findComponent(StatsCollapse)

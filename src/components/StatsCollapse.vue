@@ -1,7 +1,14 @@
 <script setup lang="ts">
-import { ref } from 'vue'
+import { computed, ref } from 'vue'
 import { ChevronUp, ChevronDown } from 'lucide-vue-next'
 import StatsList from './StatsList.vue'
+import type { ComputedStats } from '../models/StatsContext'
+import type { StatsResult } from '../models/StatsResult';
+
+const { stats, solves } = defineProps<{
+  stats: ComputedStats,
+  solves: StatsResult[]
+}>()
 
 const isOpen = ref(false)
 function close() {
@@ -29,13 +36,8 @@ function collapseLeave(el: Element) {
   (el as HTMLElement).style.overflow = 'hidden';
 }
 
-const dummyStats = {
-  'avg5': 10353,
-  'avg12': 10353,
-  'avg25': 10353,
-  'avg50': 10353,
-  'avg100': 10353,
-}
+const totalSolves = computed(() => solves.length)
+const successfulSolves = computed(() => solves.filter(solve => solve !== 'DNF').length)
 
 </script>
 
@@ -51,7 +53,7 @@ const dummyStats = {
         @leave="collapseLeave">
         <div @click.stop="close" v-if="isOpen">
           <div class=" divider my-1" />
-          <StatsList :stats="dummyStats" :successful-solves="5" :total-solves="6" />
+          <StatsList :stats="stats" :successful-solves="successfulSolves" :total-solves="totalSolves" />
           <RouterLink to="/solves" custom v-slot="{ navigate }">
             <button @click.stop="navigate" class="w-full btn mt-2">SOLVES</button>
           </RouterLink>

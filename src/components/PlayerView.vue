@@ -2,6 +2,7 @@
 import { useTemplateRef } from 'vue';
 import StatsCollapse from './StatsCollapse.vue';
 import VirtualTimer from './VirtualTimer.vue';
+import type { StatsResult } from '../models/StatsResult';
 const collapse = useTemplateRef('collapse')
 
 defineProps<{
@@ -15,6 +16,16 @@ function onScrambleClick() {
   if (collapse?.value?.isOpen) return
   emit('scramble-clicked')
 }
+
+const dummySolves = [10353, 'DNF', 21021, 'DNF', 31123] as StatsResult[]
+
+const dummyStats = {
+  'avg5': 10353,
+  'avg12': 10353,
+  'avg25': 10353,
+  'avg50': 10353,
+  'avg100': 10353,
+}
 </script>
 
 <template>
@@ -23,7 +34,7 @@ function onScrambleClick() {
     <div class="grow flex flex-col justify-between relative">
       <div class="scramble" @click="onScrambleClick">{{ scramble }}</div>
       <VirtualTimer />
-      <StatsCollapse ref="collapse" />
+      <StatsCollapse :solves="dummySolves" :stats="dummyStats" ref="collapse" />
     </div>
   </div>
 </template>

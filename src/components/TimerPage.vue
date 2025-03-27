@@ -5,6 +5,7 @@ import PlayerView from './PlayerView.vue';
 import TwoSideModal from './TwoSideModal.vue';
 import type { Side } from '../models/Side';
 import type { Penalty } from '../models/Penalty';
+import { puzzlesMap } from '../lib/puzzlesMap';
 
 const scramble = "R' U' F U2 B2 D' R2 D R2 B2 U B2 D' B R' U2 F2 R2 B L F2 D2 U' R' U' F"
 import FullScreenModal from './FullScreenModal.vue';
@@ -17,9 +18,11 @@ function openScrambleModal() {
 const puzzlesModal = useTemplateRef('puzzles-modal')
 
 const penaltyModal = useTemplateRef('penalty-modal')
-function togglePenalty(player: Side, penalty: Penalty | null) {
+function togglePenalty(player: Side, penalty: Penalty | null) { }
 
-}
+const emit = defineEmits<{
+  'puzzle-selected': [eventId: string]
+}>()
 </script>
 
 <template>
@@ -35,7 +38,10 @@ function togglePenalty(player: Side, penalty: Penalty | null) {
     </div>
     <PlayerView id="player1" @scramble-clicked="openScrambleModal" :scramble="scramble" />
     <FullScreenModal ref="puzzles-modal">
-      <div class="m-4 flex flex-wrap justify-center align-center"></div>
+      <div class="m-4 flex flex-wrap gap-3 justify-center align-center">
+        <button @click="emit('puzzle-selected', key)" class="btn btn-primary px-3 grow"
+          v-for="(value, key) in puzzlesMap" :key="key">{{ value }}</button>
+      </div>
     </FullScreenModal>
     <TwoSideModal ref="scramble-modal">
       <template #modal-content>

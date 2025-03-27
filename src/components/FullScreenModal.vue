@@ -11,7 +11,7 @@ defineExpose({
 <template>
   <dialog id="modal" class="modal" ref="modal">
     <div class="modal-box" @click.stop="modal?.close()">
-      <slot name="modal-content"></slot>
+      <slot></slot>
     </div>
     <form method="dialog" class="modal-backdrop">
       <button>close</button>

@@ -1,14 +1,20 @@
 <script setup lang="ts">
 import { useTemplateRef } from 'vue';
+import 'scramble-display';
 import PlayerView from './PlayerView.vue';
 import TwoSideModal from './TwoSideModal.vue';
 import type { Side } from '../models/Side';
 import type { Penalty } from '../models/Penalty';
+
 const scramble = "R' U' F U2 B2 D' R2 D R2 B2 U B2 D' B R' U2 F2 R2 B L F2 D2 U' R' U' F"
+import FullScreenModal from './FullScreenModal.vue';
+
 const scrambleModal = useTemplateRef('scramble-modal')
 function openScrambleModal() {
   scrambleModal?.value?.modal?.showModal()
 }
+
+const puzzlesModal = useTemplateRef('puzzles-modal')
 
 const penaltyModal = useTemplateRef('penalty-modal')
 function togglePenalty(player: Side, penalty: Penalty | null) {
@@ -21,12 +27,16 @@ function togglePenalty(player: Side, penalty: Penalty | null) {
     <PlayerView id="player2" @scramble-clicked="openScrambleModal" :scramble="scramble" class="player2" />
     <div class="divider-custom">
       <div class="divider-content absolute w-full -top-5 flex justify-between">
-        <button class="ml-8 w-24 text-xl h-10 btn btn-outline bg-base-100">PUZZLES</button>
+        <button class="ml-8 w-24 text-xl h-10 btn btn-outline bg-base-100"
+          @click="puzzlesModal?.modal?.showModal">PUZZLES</button>
         <button class="mr-8 w-24 text-xl h-10 btn btn-outline bg-base-100"
-          @click="penaltyModal?.modal?.showModal()">PENALTY</button>
+          @click="penaltyModal?.modal?.showModal">PENALTY</button>
       </div>
     </div>
     <PlayerView id="player1" @scramble-clicked="openScrambleModal" :scramble="scramble" />
+    <FullScreenModal ref="puzzles-modal">
+      <div class="m-4 flex flex-wrap justify-center align-center"></div>
+    </FullScreenModal>
     <TwoSideModal ref="scramble-modal">
       <template #modal-content>
         <div class="flex place-content-center">

@@ -42,7 +42,7 @@
   @apply text-center;
 }
 
-.time {
+.timer {
   @apply text-center;
   @apply text-5xl;
 }

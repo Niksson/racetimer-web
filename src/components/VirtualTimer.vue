@@ -15,10 +15,14 @@ actor.actorRef.subscribe({
 })
 
 function putHandsDown() {
+  if (actor.snapshot.value.status === 'done')
+    return
   actor.send({ type: 'handsDown' })
 }
 
 function raiseHandsUp() {
+  if (actor.snapshot.value.status === 'done')
+    return
   actor.send({ type: 'handsUp' })
 }
 

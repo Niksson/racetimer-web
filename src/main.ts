@@ -4,6 +4,7 @@ import App from './App.vue'
 import { createRouter, createWebHashHistory } from 'vue-router'
 import TimerPage from './components/TimerPage.vue'
 import SolvesPage from './components/SolvesPage.vue'
+import { createPinia } from 'pinia'
 
 const router = createRouter({
   history: createWebHashHistory(),
@@ -20,4 +21,6 @@ router.afterEach((to, from) => {
     toDepth < fromDepth ? 'route-transition-slide-right' : 'route-transition-slide-left'
 })
 
-createApp(App).use(router).mount('#app')
+const pinia = createPinia()
+
+createApp(App).use(router).use(pinia).mount('#app')

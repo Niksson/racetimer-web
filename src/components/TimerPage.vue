@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { useTemplateRef } from 'vue';
+import { onBeforeMount, onMounted, useTemplateRef } from 'vue';
 import 'scramble-display';
 import PlayerView from './PlayerView.vue';
 import TwoSideModal from './TwoSideModal.vue';
@@ -7,8 +7,10 @@ import type { Side } from '../models/Side';
 import type { Penalty } from '../models/Penalty';
 import { puzzlesMap } from '../lib/puzzlesMap';
 
-const scramble = "R' U' F U2 B2 D' R2 D R2 B2 U B2 D' B R' U2 F2 R2 B L F2 D2 U' R' U' F"
+const sessionContextStore = useSessionContext()
+
 import FullScreenModal from './FullScreenModal.vue';
+import { useSessionContext } from '../stores/sessionContext';
 
 const scrambleModal = useTemplateRef('scramble-modal')
 function openScrambleModal() {
@@ -27,7 +29,8 @@ const emit = defineEmits<{
 
 <template>
   <div id="timer-page" class="unselectable grid grid-rows-[1fr_auto_1fr] h-screen w-full">
-    <PlayerView id="player2" @scramble-clicked="openScrambleModal" :scramble="scramble" class="player2" />
+    <PlayerView id="player2" @scramble-clicked="openScrambleModal"
+      :scramble="sessionContextStore.roundContext.scramble ?? 'Generating...'" class="player2" />
     <div class="divider-custom">
       <div class="divider-content absolute w-full -top-5 flex justify-between">
         <button class="ml-8 w-24 text-xl h-10 btn btn-outline bg-base-100"
@@ -36,7 +39,8 @@ const emit = defineEmits<{
           @click="penaltyModal?.modal?.showModal">PENALTY</button>
       </div>
     </div>
-    <PlayerView id="player1" @scramble-clicked="openScrambleModal" :scramble="scramble" />
+    <PlayerView id="player1" @scramble-clicked="openScrambleModal"
+      :scramble="sessionContextStore.roundContext.scramble ?? 'Generating'" />
     <FullScreenModal ref="puzzles-modal">
       <div class="m-4 flex flex-wrap gap-3 justify-center items-center">
         <button @click="emit('puzzle-selected', key)" class="btn btn-primary px-3 grow"
@@ -46,7 +50,8 @@ const emit = defineEmits<{
     <TwoSideModal ref="scramble-modal">
       <template #modal-content>
         <div class="flex place-content-center">
-          <scramble-display event="333" :scramble="scramble" />
+          <div class="text-lg" v-if="!sessionContextStore.roundContext.scramble">Generating...</div>
+          <scramble-display v-else event="333" :scramble="sessionContextStore.roundContext.scramble" />
         </div>
       </template>
     </TwoSideModal>

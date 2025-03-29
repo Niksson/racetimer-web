@@ -50,5 +50,11 @@ export default defineConfig({
       }
     }),
     tailwindcss()
-  ]
+  ],
+  worker: {
+    format: 'es'
+  },
+  optimizeDeps: {
+    exclude: ['cubing']
+  }
 })

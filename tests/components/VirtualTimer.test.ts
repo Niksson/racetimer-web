@@ -17,7 +17,7 @@ describe('VirtualTimer', () => {
   test('puts timer into waiting state when "hands are put onto it"', async () => {
     const wrapper = mount(VirtualTimer)
 
-    wrapper.vm.putHandsDown()
+    wrapper.trigger('touchstart')
     await wrapper.vm.$nextTick()
 
     const timerText = wrapper.find('.timer')
@@ -27,9 +27,9 @@ describe('VirtualTimer', () => {
   test('puts timer back into ready if "hands are up" before delay', async () => {
     const wrapper = mount(VirtualTimer)
 
-    wrapper.vm.putHandsDown()
+    wrapper.trigger('touchstart')
     await wrapper.vm.$nextTick()
-    wrapper.vm.raiseHandsUp()
+    wrapper.trigger('touchend')
     await wrapper.vm.$nextTick()
 
     const timerText = wrapper.find('.timer')
@@ -39,7 +39,7 @@ describe('VirtualTimer', () => {
   test('puts timer into standby after delay', async () => {
     const wrapper = mount(VirtualTimer)
 
-    wrapper.vm.putHandsDown()
+    wrapper.trigger('touchstart')
     await wrapper.vm.$nextTick()
     await vi.advanceTimersByTimeAsync(350)
     await wrapper.vm.$nextTick()
@@ -51,10 +51,10 @@ describe('VirtualTimer', () => {
   test('tracks time when timer is running', async () => {
     const wrapper = mount(VirtualTimer)
 
-    wrapper.vm.putHandsDown()
+    wrapper.trigger('touchstart')
     await wrapper.vm.$nextTick()
     await vi.advanceTimersByTimeAsync(350)
-    wrapper.vm.raiseHandsUp()
+    wrapper.trigger('touchend')
     await wrapper.vm.$nextTick()
     await vi.advanceTimersByTimeAsync(350)
     await wrapper.vm.$nextTick()
@@ -67,12 +67,12 @@ describe('VirtualTimer', () => {
   test('puts timer into stopped after putting hands down again', async () => {
     const wrapper = mount(VirtualTimer)
 
-    wrapper.vm.putHandsDown()
+    wrapper.trigger('touchstart')
     await wrapper.vm.$nextTick()
     await vi.advanceTimersByTimeAsync(350)
-    wrapper.vm.raiseHandsUp()
+    wrapper.trigger('touchend')
     await wrapper.vm.$nextTick()
-    wrapper.vm.putHandsDown()
+    wrapper.trigger('touchstart')
     await wrapper.vm.$nextTick()
 
     const timerText = wrapper.find('.timer')
@@ -82,14 +82,14 @@ describe('VirtualTimer', () => {
   test('updates context time one last time when stopping', async () => {
     const wrapper = mount(VirtualTimer)
 
-    wrapper.vm.putHandsDown()
+    wrapper.trigger('touchstart')
     await wrapper.vm.$nextTick()
     await vi.advanceTimersByTimeAsync(350)
-    wrapper.vm.raiseHandsUp()
+    wrapper.trigger('touchend')
     await wrapper.vm.$nextTick()
     await vi.advanceTimersByTimeAsync(355)
     await wrapper.vm.$nextTick()
-    wrapper.vm.putHandsDown()
+    wrapper.trigger('touchstart')
     await wrapper.vm.$nextTick()
 
     const timerText = wrapper.find('.timer')
@@ -100,14 +100,14 @@ describe('VirtualTimer', () => {
   test('emits elapsed time after stopping', async () => {
     const wrapper = mount(VirtualTimer)
 
-    wrapper.vm.putHandsDown()
+    wrapper.trigger('touchstart')
     await wrapper.vm.$nextTick()
     await vi.advanceTimersByTimeAsync(350)
-    wrapper.vm.raiseHandsUp()
+    wrapper.trigger('touchend')
     await wrapper.vm.$nextTick()
     await vi.advanceTimersByTimeAsync(355)
     await wrapper.vm.$nextTick()
-    wrapper.vm.putHandsDown()
+    wrapper.trigger('touchstart')
     await wrapper.vm.$nextTick()
 
     expect(wrapper.emitted('timer-stopped')).toEqual([[355]])

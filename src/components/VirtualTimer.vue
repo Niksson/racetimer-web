@@ -22,13 +22,10 @@ function raiseHandsUp() {
   actor.send({ type: 'handsUp' })
 }
 
-defineExpose({
-  putHandsDown,
-  raiseHandsUp
-})
 </script>
 
 <template>
-  <div class="timer" :class="`timer-${actor.snapshot.value.value}`">{{
-    formatDuration(actor.snapshot.value.context.elapsedTimeMs) }}</div>
+  <div @touchstart.stop="putHandsDown" @touchend.stop="raiseHandsUp" class="timer"
+    :class="`timer-${actor.snapshot.value.value}`">{{
+      formatDuration(actor.snapshot.value.context.elapsedTimeMs) }}</div>
 </template>

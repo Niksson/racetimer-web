@@ -25,7 +25,7 @@ function raiseHandsUp() {
 </script>
 
 <template>
-  <div @touchstart.stop="putHandsDown" @touchend.stop="raiseHandsUp" class="timer"
+  <div @touchstart.stop.prevent="putHandsDown" @touchend.stop.prevent="raiseHandsUp" class="timer"
     :class="`timer-${actor.snapshot.value.value}`">{{
       formatDuration(actor.snapshot.value.context.elapsedTimeMs) }}</div>
 </template>

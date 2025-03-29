@@ -38,7 +38,7 @@ const emit = defineEmits<{
     </div>
     <PlayerView id="player1" @scramble-clicked="openScrambleModal" :scramble="scramble" />
     <FullScreenModal ref="puzzles-modal">
-      <div class="m-4 flex flex-wrap gap-3 justify-center align-center">
+      <div class="m-4 flex flex-wrap gap-3 justify-center items-center">
         <button @click="emit('puzzle-selected', key)" class="btn btn-primary px-3 grow"
           v-for="(value, key) in puzzlesMap" :key="key">{{ value }}</button>
       </div>

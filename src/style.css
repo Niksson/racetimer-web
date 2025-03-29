@@ -47,6 +47,14 @@
   @apply text-5xl;
 }
 
+.timer-waiting {
+  @apply text-red-500;
+}
+
+.timer-standby {
+  @apply text-green-600;
+}
+
 .stats-collapse-enter-active,
 .stats-collapse-leave-active {
   transition: all 0.2s ease-in-out;

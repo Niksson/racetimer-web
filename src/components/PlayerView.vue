@@ -33,7 +33,7 @@ const dummyStats = {
     <div class="score">0 : <span class="text-accent">0</span></div>
     <div class="grow flex flex-col justify-between relative">
       <div class="scramble" @click="onScrambleClick">{{ scramble }}</div>
-      <VirtualTimer />
+      <VirtualTimer class="grow flex justify-center items-center" />
       <StatsCollapse :solves="dummySolves" :stats="dummyStats" ref="collapse" />
     </div>
   </div>

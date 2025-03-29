@@ -89,9 +89,7 @@ export const timerMachine = setup({
         }
       }
     },
-    stopped: {
-      type: 'final'
-    }
+    stopped: {}
   },
   output: ({ context }) => ({
     elapsedTimeMs: context.elapsedTimeMs

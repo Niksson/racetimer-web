@@ -3,11 +3,11 @@ import { computed, ref } from 'vue'
 import { ChevronUp, ChevronDown } from 'lucide-vue-next'
 import StatsList from './StatsList.vue'
 import type { ComputedStats } from '../models/StatsContext'
-import type { StatsResult } from '../models/StatsResult';
+import type { Solve } from '../models/Solve';
 
 const { stats, solves } = defineProps<{
   stats: ComputedStats,
-  solves: StatsResult[]
+  solves: Solve[]
 }>()
 
 const isOpen = ref(false)
@@ -37,7 +37,7 @@ function collapseLeave(el: Element) {
 }
 
 const totalSolves = computed(() => solves.length)
-const successfulSolves = computed(() => solves.filter(solve => solve !== 'DNF').length)
+const successfulSolves = computed(() => solves.filter(solve => solve.penalty !== 'DNF').length)
 
 </script>
 

@@ -2,13 +2,15 @@
 import { useTemplateRef } from 'vue';
 import StatsCollapse from './StatsCollapse.vue';
 import VirtualTimer from './VirtualTimer.vue';
-import type { StatsResult } from '../models/StatsResult';
+import { useSessionContext } from '../stores/sessionContext';
+import type { Side } from '../models/Side';
 const collapse = useTemplateRef('collapse')
 
 defineProps<{
-  scramble: string,
-  id: string
+  side: Side
 }>()
+
+const sessionContext = useSessionContext()
 
 const emit = defineEmits(['scramble-clicked'])
 
@@ -16,8 +18,6 @@ function onScrambleClick() {
   if (collapse?.value?.isOpen) return
   emit('scramble-clicked')
 }
-
-const dummySolves = [10353, 'DNF', 21021, 'DNF', 31123] as StatsResult[]
 
 const dummyStats = {
   'avg5': 10353,
@@ -29,12 +29,18 @@ const dummyStats = {
 </script>
 
 <template>
-  <div :id="id" @click="collapse?.close()" class="flex gap-3 flex-col">
-    <div class="score">0 : <span class="text-accent">0</span></div>
+  <div :id="side" @click="collapse?.close()" class="flex gap-3 flex-col">
+    <div class="score">{{ sessionContext.playerContexts.player1.score }} : <span class="text-accent">{{
+      sessionContext.playerContexts.player2.score }}</span>
+    </div>
     <div class="grow flex flex-col justify-between relative">
-      <div class="scramble" @click="onScrambleClick">{{ scramble }}</div>
-      <VirtualTimer class="grow flex justify-center items-center" />
-      <StatsCollapse :solves="dummySolves" :stats="dummyStats" ref="collapse" />
+      <div class="scramble" @click="onScrambleClick">
+        <span v-if="sessionContext.roundContext.scramble">{{ sessionContext.roundContext.scramble }}</span>
+        <span v-else>Generating...</span>
+      </div>
+      <VirtualTimer class="grow flex justify-center items-center"
+        @timer-stopped="(e) => sessionContext.recordSolve(side, e)" />
+      <StatsCollapse :solves="sessionContext.playerContexts[side].solves" :stats="dummyStats" ref="collapse" />
     </div>
   </div>
 </template>

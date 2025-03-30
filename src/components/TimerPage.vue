@@ -48,8 +48,8 @@ const emit = defineEmits<{
     <TwoSideModal ref="scramble-modal">
       <template #modal-content>
         <div class="flex place-content-center">
-          <div class="text-lg" v-if="!sessionContextStore.roundContext.scramble">Generating...</div>
-          <scramble-display v-else event="333" :scramble="sessionContextStore.roundContext.scramble" />
+          <div class="text-lg" v-if="!sessionContextStore.currentRound.scramble">Generating...</div>
+          <scramble-display v-else event="333" :scramble="sessionContextStore.currentRound.scramble" />
         </div>
       </template>
     </TwoSideModal>

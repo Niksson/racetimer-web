@@ -1,5 +1,5 @@
 import { defineStore } from 'pinia'
-import { ref } from 'vue'
+import { computed, ref } from 'vue'
 import { randomScrambleForEvent } from 'cubing/scramble'
 import { createStatsSchema, type StatsSchema } from '../models/StatsSchema'
 import { compareSolves, type Solve } from '../models/Solve'
@@ -8,12 +8,22 @@ import type { Side } from '../models/Side'
 export type RoundContext = {
   id: number
   scramble?: string
+  solves: Record<Side, Solve | null>
+  winner: Side | null
 }
 
-export type PlayerContext = {
-  score: number
-  solves: Solve[]
-}
+const createRoundContext = (
+  id: number,
+  scramlbe: string | undefined = undefined
+): RoundContext => ({
+  id: id,
+  scramble: scramlbe,
+  solves: {
+    player1: null,
+    player2: null
+  },
+  winner: null
+})
 
 const statsSchema: StatsSchema = createStatsSchema({
   averageTrimPercent: 5,
@@ -34,58 +44,65 @@ export const useSessionContext = defineStore('sessionContext', () => {
   }
 
   // Initial round context
-  const roundContext = ref<RoundContext>({
-    id: 1
-  })
+  const currentRound = ref<RoundContext>(createRoundContext(1))
   randomScrambleForEvent(eventId.value).then((scramble) => {
-    roundContext.value.scramble = scramble.toString()
+    currentRound.value.scramble = scramble.toString()
   })
 
-  // Initial players' contexts
-  const playerContexts = ref<Record<Side, PlayerContext>>({
-    player1: {
-      score: 0,
-      solves: []
-    },
-    player2: {
-      score: 0,
-      solves: []
-    }
+  // All previous rounds
+  const rounds = ref<RoundContext[]>([])
+
+  // Score
+  const score = computed(() => {
+    const player1Score = rounds.value.filter((r) => r.winner === 'player1').length
+    const player2Score = rounds.value.filter((r) => r.winner === 'player2').length
+
+    return { player1: player1Score, player2: player2Score }
   })
 
   // Recording round results
   function recordSolve(player: Side, elapsedTimeMs: number) {
-    const playerContext = playerContexts.value[player]
     const solve = {
       timeMs: elapsedTimeMs,
       penalty: null
     }
-    playerContext.solves.push(solve)
-
-    if (playerContexts.value.player1.solves.length === playerContexts.value.player2.solves.length) {
+    currentRound.value.solves[player] = solve
+    if (currentRound.value.solves.player1 && currentRound.value.solves.player2) {
       concludeRound()
       startNewRound()
     }
   }
 
   function concludeRound() {
-    const [player1Solve] = playerContexts.value.player1.solves.slice(-1)
-    const [player2Solve] = playerContexts.value.player2.solves.slice(-1)
-    const comparison = compareSolves(player1Solve, player2Solve)
-    if (comparison < 0) playerContexts.value.player1.score++
-    else if (comparison > 0) playerContexts.value.player2.score++
+    // Tally the score
+    const comparison = compareSolves(
+      currentRound.value.solves.player1!,
+      currentRound.value.solves.player2!
+    )
+    if (comparison < 0) currentRound.value.winner = 'player1'
+    else if (comparison > 0) currentRound.value.winner = 'player2'
+
+    rounds.value.push(currentRound.value)
   }
 
   // New round
   function startNewRound() {
-    roundContext.value = {
-      id: roundContext.value.id + 1
-    }
+    // Set up new round
+    currentRound.value = createRoundContext(currentRound.value.id + 1, currentRound.value.scramble)
 
     randomScrambleForEvent(eventId.value).then((scramble) => {
-      roundContext.value.scramble = scramble.toString()
+      currentRound.value.scramble = scramble.toString()
     })
   }
 
-  return { eventId, setEventId, roundContext, playerContexts, recordSolve }
+  return {
+    eventId,
+    setEventId,
+    rounds,
+    score,
+    currentRound,
+    recordSolve,
+    concludeRound,
+    startNewRound
+  }
 })

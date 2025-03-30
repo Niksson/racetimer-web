@@ -8,14 +8,14 @@ describe('VirtualTimer', () => {
   })
 
   test('renders correctly', () => {
-    const wrapper = mount(VirtualTimer, { props: { blocked: false } })
+    const wrapper = mountVirtualTimer()
     expect(wrapper.text()).toMatch('0.000')
     const timerText = wrapper.find('.timer')
     expect(timerText.classes()).toContain('timer-ready')
   })
 
   test('puts timer into waiting state when "hands are put onto it"', async () => {
-    const wrapper = mount(VirtualTimer, { props: { blocked: false } })
+    const wrapper = mountVirtualTimer()
 
     await wrapper.trigger('touchstart')
     await wrapper.vm.$nextTick()
@@ -25,7 +25,7 @@ describe('VirtualTimer', () => {
   })
 
   test('puts timer back into ready if "hands are up" before delay', async () => {
-    const wrapper = mount(VirtualTimer, { props: { blocked: false } })
+    const wrapper = mountVirtualTimer()
 
     await wrapper.trigger('touchstart')
     await wrapper.vm.$nextTick()
@@ -37,7 +37,7 @@ describe('VirtualTimer', () => {
   })
 
   test('puts timer into standby after delay', async () => {
-    const wrapper = mount(VirtualTimer, { props: { blocked: false } })
+    const wrapper = mountVirtualTimer()
 
     await wrapper.trigger('touchstart')
     await wrapper.vm.$nextTick()
@@ -49,7 +49,7 @@ describe('VirtualTimer', () => {
   })
 
   test('tracks time when timer is running', async () => {
-    const wrapper = mount(VirtualTimer, { props: { blocked: false } })
+    const wrapper = mountVirtualTimer()
 
     await wrapper.trigger('touchstart')
     await wrapper.vm.$nextTick()
@@ -65,7 +65,7 @@ describe('VirtualTimer', () => {
   })
 
   test('puts timer into stopped after putting hands down again', async () => {
-    const wrapper = mount(VirtualTimer, { props: { blocked: false } })
+    const wrapper = mountVirtualTimer()
 
     await wrapper.trigger('touchstart')
     await wrapper.vm.$nextTick()
@@ -80,7 +80,7 @@ describe('VirtualTimer', () => {
   })
 
   test('updates context time one last time when stopping', async () => {
-    const wrapper = mount(VirtualTimer, { props: { blocked: false } })
+    const wrapper = mountVirtualTimer()
 
     await wrapper.trigger('touchstart')
     await wrapper.vm.$nextTick()
@@ -98,7 +98,7 @@ describe('VirtualTimer', () => {
   })
 
   test('emits elapsed time after stopping', async () => {
-    const wrapper = mount(VirtualTimer, { props: { blocked: false } })
+    const wrapper = mountVirtualTimer()
 
     await wrapper.trigger('touchstart')
     await wrapper.vm.$nextTick()
@@ -115,7 +115,7 @@ describe('VirtualTimer', () => {
   })
 
   test('does not allow to start again after stopping but before unblocking', async () => {
-    const wrapper = mount(VirtualTimer, { props: { blocked: false } })
+    const wrapper = mountVirtualTimer()
 
     await wrapper.trigger('touchstart')
     await wrapper.vm.$nextTick()
@@ -137,7 +137,7 @@ describe('VirtualTimer', () => {
   })
 
   test('allows to start again after stopping after unblocking', async () => {
-    const wrapper = mount(VirtualTimer, { props: { blocked: false } })
+    const wrapper = mountVirtualTimer()
 
     await wrapper.trigger('touchstart')
     await wrapper.vm.$nextTick()
@@ -150,9 +150,7 @@ describe('VirtualTimer', () => {
     await wrapper.vm.$nextTick()
     await wrapper.trigger('touchend')
     await wrapper.vm.$nextTick()
-    await wrapper.setProps({ blocked: true })
-    await wrapper.vm.$nextTick()
-    await wrapper.setProps({ blocked: false })
+    wrapper.vm.unblock()
     await wrapper.vm.$nextTick()
     await wrapper.trigger('touchstart')
     await vi.advanceTimersByTimeAsync(355)
@@ -162,3 +160,7 @@ describe('VirtualTimer', () => {
     expect(timerText.classes()).toContain('timer-standby')
   })
 })
+
+function mountVirtualTimer() {
+  return mount(VirtualTimer)
+}

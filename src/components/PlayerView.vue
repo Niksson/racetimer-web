@@ -39,9 +39,11 @@ const dummyStats = {
       sessionContext.score.player2 }}</span>
     </div>
     <div class="grow flex flex-col justify-between relative">
-      <div class="scramble" @click="onScrambleClick">
-        <span v-if="sessionContext.currentRound.scramble">{{ sessionContext.currentRound.scramble }}</span>
-        <span v-else>Generating...</span>
+      <div class="mx-3 text-center">
+        <span v-if="sessionContext.currentRound.scramble" :class="[sessionContext.eventContext.scrambleSize]"
+          @click="onScrambleClick">{{
+            sessionContext.currentRound.scramble }}</span>
+        <span v-else class="text-xl">Generating...</span>
       </div>
       <VirtualTimer class="grow flex justify-center items-center"
         @timer-stopped="(e) => sessionContext.recordSolve(side, e)" ref="timer" />

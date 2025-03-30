@@ -36,12 +36,6 @@
   @apply text-3xl;
 }
 
-.scramble {
-  @apply mx-3;
-  @apply text-xl;
-  @apply text-center;
-}
-
 .timer {
   @apply text-center;
   @apply text-5xl;

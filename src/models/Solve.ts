@@ -7,7 +7,7 @@ export type Solve = {
   penalty: Penalty | null
 }
 
-export const solveToString = (solve: Solve): string => {
+export const toString = (solve: Solve): string => {
   if (solve.penalty === 'DNF') return 'DNF'
   const time = solve.penalty === '+2' ? solve.timeMs + 2000 : solve.timeMs
   const formattedTime = formatDuration(time)

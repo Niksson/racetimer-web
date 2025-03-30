@@ -4,6 +4,7 @@ import { randomScrambleForEvent } from 'cubing/scramble'
 import { createStatsSchema, type StatsSchema } from '../models/StatsSchema'
 import { compareSolves, type Solve } from '../models/Solve'
 import type { Side } from '../models/Side'
+import { puzzlesMap, type EventContext } from '../lib/puzzlesMap'
 
 export type RoundContext = {
   id: number
@@ -38,14 +39,11 @@ const statsSchema: StatsSchema = createStatsSchema({
 
 export const useSessionContext = defineStore('sessionContext', () => {
   // Event ID
-  const eventId = ref<string>('333')
-  function setEventId(id: string) {
-    eventId.value = id
-  }
+  const eventContext = ref<EventContext>(puzzlesMap['333'])
 
   // Initial round context
   const currentRound = ref<RoundContext>(createRoundContext(1))
-  randomScrambleForEvent(eventId.value).then((scramble) => {
+  randomScrambleForEvent(eventContext.value.eventId).then((scramble) => {
     currentRound.value.scramble = scramble.toString()
   })
 
@@ -90,19 +88,30 @@ export const useSessionContext = defineStore('sessionContext', () => {
     // Set up new round
     currentRound.value = createRoundContext(currentRound.value.id + 1, currentRound.value.scramble)
 
-    randomScrambleForEvent(eventId.value).then((scramble) => {
+    randomScrambleForEvent(eventContext.value.eventId).then((scramble) => {
+      currentRound.value.scramble = scramble.toString()
+    })
+  }
+
+  // Reset race with a new puzzle
+  function startNewRace(event: string) {
+    eventContext.value = puzzlesMap[event]
+    rounds.value = []
+
+    currentRound.value = createRoundContext(1)
+    randomScrambleForEvent(eventContext.value.eventId).then((scramble) => {
       currentRound.value.scramble = scramble.toString()
     })
   }
 
   return {
-    eventId,
-    setEventId,
+    eventContext,
     rounds,
     score,
     currentRound,
     recordSolve,
     concludeRound,
-    startNewRound
+    startNewRound,
+    startNewRace
   }
 })

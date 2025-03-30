@@ -2,8 +2,8 @@ import { createApp } from 'vue'
 import './style.css'
 import App from './App.vue'
 import { createRouter, createWebHashHistory } from 'vue-router'
-import TimerPage from './components/TimerPage.vue'
-import SolvesPage from './components/SolvesPage.vue'
+import TimerPage from './pages/TimerPage.vue'
+import SolvesPage from './pages/SolvesPage.vue'
 import { createPinia } from 'pinia'
 
 const router = createRouter({

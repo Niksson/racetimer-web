@@ -47,7 +47,8 @@
   @apply text-5xl;
 }
 
-.timer-waiting {
+.timer-waiting,
+.timer-blocked {
   @apply text-red-500;
 }
 

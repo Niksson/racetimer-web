@@ -1,21 +1,19 @@
-import { assign, setup } from 'xstate'
+import { assign, emit, setup } from 'xstate'
 import { TIMER_DELAY_MS, TIMER_TICK_TIME_MS } from '../lib/const'
 import dayjs from 'dayjs'
 
-type Events = { type: 'handsDown' } | { type: 'handsUp' }
+type Events = { type: 'handsDown' } | { type: 'handsUp' } | { type: 'unblock' }
 type Context = {
   startDate?: Date
   elapsedTimeMs: number
 }
-type Output = {
-  elapsedTimeMs: number
-}
+type Emits = { type: 'timer-stopped'; elapsedTimeMs: number }
 
 export const timerMachine = setup({
   types: {
     events: {} as Events,
     context: {} as Context,
-    output: {} as Output
+    emitted: {} as Emits
   },
   delays: {
     timerDelay: TIMER_DELAY_MS,
@@ -32,6 +30,12 @@ export const timerMachine = setup({
       return {
         elapsedTimeMs: diff
       }
+    }),
+    timerStopped: emit(({ context }) => {
+      return {
+        type: 'timer-stopped',
+        elapsedTimeMs: context.elapsedTimeMs
+      } as Emits
     })
   }
 }).createMachine({
@@ -65,7 +69,7 @@ export const timerMachine = setup({
       on: {
         handsDown: {
           target: 'stopped',
-          actions: 'setElapsedTime'
+          actions: ['setElapsedTime', 'timerStopped']
         }
       },
       after: {
@@ -79,7 +83,7 @@ export const timerMachine = setup({
       on: {
         handsDown: {
           target: 'stopped',
-          actions: 'setElapsedTime'
+          actions: ['setElapsedTime', 'timerStopped']
         }
       },
       after: {
@@ -90,7 +94,16 @@ export const timerMachine = setup({
       }
     },
     stopped: {
-      type: 'final'
+      on: {
+        handsDown: 'blocked',
+        unblock: 'ready'
+      }
+    },
+    blocked: {
+      on: {
+        handsUp: 'stopped',
+        unblock: 'ready'
+      }
     }
   },
   output: ({ context }) => ({

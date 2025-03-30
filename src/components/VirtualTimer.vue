@@ -2,27 +2,32 @@
 import { useMachine } from '@xstate/vue';
 import { timerMachine } from '../stateMachines/timerMachine';
 import { formatDuration } from '../lib/durationFormat';
+import { watch } from 'vue';
+
+const props = defineProps<{
+  blocked: boolean
+}>()
 
 const emit = defineEmits<{
   'timer-stopped': [elapsedTimeMs: number]
 }>()
 
 const actor = useMachine(timerMachine)
-actor.actorRef.subscribe({
-  complete() {
-    emit('timer-stopped', actor.snapshot.value.output!.elapsedTimeMs)
-  }
+
+watch(() => props.blocked, (newValue, oldValue) => {
+  if (oldValue === true && newValue === false)
+    actor.send({ type: 'unblock' })
+})
+
+actor.actorRef.on('timer-stopped', (e) => {
+  emit('timer-stopped', e.elapsedTimeMs)
 })
 
 function putHandsDown() {
-  if (actor.snapshot.value.status === 'done')
-    return
   actor.send({ type: 'handsDown' })
 }
 
 function raiseHandsUp() {
-  if (actor.snapshot.value.status === 'done')
-    return
   actor.send({ type: 'handsUp' })
 }
 

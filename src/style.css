@@ -93,3 +93,18 @@
 .route-transition-slide-right-leave-to {
   transform: translateX(100%);
 }
+
+.toast-fade-enter-active,
+.toast-fade-leave-active {
+  transition: all 0.2s ease-in-out;
+}
+
+.toast-fade-enter-to {
+  opacity: 1;
+  transform: scale(1);
+}
+
+.toast-fade-leave-to {
+  opacity: 0;
+  transform: scale(0.7);
+}

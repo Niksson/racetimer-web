@@ -4,12 +4,12 @@ import { useRegisterSW } from 'virtual:pwa-register/vue'
 
 // periodic sync is disabled, change the value to enable it, the period is in milliseconds
 // You can remove onRegisteredSW callback and registerPeriodicSync function
-const period = 0
+const period = 1000 * 60 * 60 * 24
 
 const swActivated = ref(false)
 
 /**
- * This function will register a periodic sync check every hour, you can modify the interval as needed.
+ * This function will register a periodic sync if period is more than 0, you can modify the interval as needed.
  */
 function registerPeriodicSync(swUrl: string, r: ServiceWorkerRegistration) {
   if (period <= 0) return
@@ -51,70 +51,24 @@ const { needRefresh, updateServiceWorker } = useRegisterSW({
 })
 
 const title = computed(() => {
-
-
   if (needRefresh.value)
-    return 'New content available, click on reload button to update.'
+    return 'App update is available'
   return ''
 })
 
 function close() {
-
   needRefresh.value = false
 }
 </script>
 
 <template>
-  <div v-if="needRefresh" class="pwa-toast" aria-labelledby="toast-message" role="alert">
-    <div class="message">
-      <span id="toast-message">
-        {{ title }}
-      </span>
+  <Transition name="toast-fade">
+    <div v-if="needRefresh" class="toast toast-middle toast-center m-0" aria-labelledby="toast-message" role="alert">
+      <div class="alert alert-success">
+        <span>{{ title }}</span>
+        <button class="btn" @click="updateServiceWorker()">Reload</button>
+        <button class="btn" @click="close">Close</button>
+      </div>
     </div>
-    <div class="buttons">
-      <button type="button" class="reload" @click="updateServiceWorker()">
-        Reload
-      </button>
-      <button type="button" @click="close">
-        Close
-      </button>
-    </div>
-  </div>
+  </Transition>
 </template>
-
-<style scoped>
-  .pwa-toast {
-    position: fixed;
-    right: 0;
-    bottom: 0;
-    margin: 16px;
-    padding: 12px;
-    border: 1px solid #8885;
-    border-radius: 4px;
-    z-index: 1;
-    text-align: left;
-    box-shadow: 3px 4px 5px 0 #8885;
-    display: grid;
-    background-color: white;
-  }
-
-  .pwa-toast .message {
-    margin-bottom: 8px;
-  }
-
-  .pwa-toast .buttons {
-    display: flex;
-  }
-
-  .pwa-toast button {
-    border: 1px solid #8885;
-    outline: none;
-    margin-right: 5px;
-    border-radius: 2px;
-    padding: 3px 10px;
-  }
-
-  .pwa-toast button.reload {
-    display: block;
-  }
-</style>

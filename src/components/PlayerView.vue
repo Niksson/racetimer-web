@@ -48,7 +48,8 @@ const dummyStats = {
       </div>
       <VirtualTimer class="grow flex justify-center items-center"
         @timer-stopped="(e) => sessionContext.recordSolve(side, e)" ref="timer" />
-      <StatsCollapse :solves="sessionContext.rounds.map(r => r.solves[side]!)" :stats="dummyStats" ref="collapse" />
+      <StatsCollapse :blocked="timerRef?.isBusy ?? false" :solves="sessionContext.rounds.map(r => r.solves[side]!)"
+        :stats="dummyStats" ref="collapse" />
     </div>
   </div>
 </template>

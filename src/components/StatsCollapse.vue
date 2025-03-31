@@ -5,9 +5,10 @@ import StatsList from './StatsList.vue'
 import type { ComputedStats } from '../models/StatsContext'
 import type { Solve } from '../models/Solve';
 
-const { stats, solves } = defineProps<{
+const { stats, solves, blocked } = defineProps<{
   stats: ComputedStats,
-  solves: Solve[]
+  solves: Solve[],
+  blocked: boolean
 }>()
 
 const isOpen = ref(false)
@@ -16,6 +17,7 @@ function close() {
     isOpen.value = false
 }
 function toggle() {
+  if (blocked) return
   isOpen.value = !isOpen.value
 }
 

@@ -2,12 +2,18 @@
 import { useMachine } from '@xstate/vue';
 import { timerMachine } from '../stateMachines/timerMachine';
 import { formatDuration } from '../lib/durationFormat';
+import { computed } from 'vue';
 
 const emit = defineEmits<{
   'timer-stopped': [elapsedTimeMs: number]
 }>()
 
 const actor = useMachine(timerMachine)
+
+const isBusy = computed(() => {
+  const state = actor.snapshot.value.value
+  return state === 'waiting' || state === 'standby' || state === 'running-tick' || state === 'running-tock'
+})
 
 function unblock() {
   actor.send({ type: 'unblock' })
@@ -26,7 +32,8 @@ function raiseHandsUp() {
 }
 
 defineExpose({
-  unblock
+  unblock,
+  isBusy
 })
 </script>
 

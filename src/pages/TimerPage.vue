@@ -21,7 +21,11 @@ function openScrambleModal() {
 const puzzlesModal = useTemplateRef('puzzles-modal')
 
 const penaltyModal = useTemplateRef('penalty-modal')
-function togglePenalty(player: Side, penalty: Penalty | null) { }
+
+function setPenalty(player: Side, penalty: Penalty | null) {
+  sessionContextStore.setPenalty(player, penalty)
+  penaltyModal?.value?.modal?.close()
+}
 
 </script>
 
@@ -59,16 +63,16 @@ function togglePenalty(player: Side, penalty: Penalty | null) { }
     <TwoSideModal ref="penalty-modal">
       <template #player2>
         <div class="flex flex-wrap justify-center gap-2">
-          <button class="btn btn-success flex-1" @click="togglePenalty('player2', null)">OK</button>
-          <button class="btn btn-warning flex-1" @click="togglePenalty('player2', '+2')">+2</button>
-          <button class="btn btn-error flex-1" @click="togglePenalty('player2', 'DNF')">DNF</button>
+          <button class="btn btn-success flex-1" @click="setPenalty('player2', null)">OK</button>
+          <button class="btn btn-warning flex-1" @click="setPenalty('player2', '+2')">+2</button>
+          <button class="btn btn-error flex-1" @click="setPenalty('player2', 'DNF')">DNF</button>
         </div>
       </template>
       <template #player1>
         <div class="flex flex-wrap justify-center gap-2">
-          <button class="btn btn-success flex-1" @click="togglePenalty('player1', null)">OK</button>
-          <button class="btn btn-warning flex-1" @click="togglePenalty('player1', '+2')">+2</button>
-          <button class="btn btn-error flex-1" @click="togglePenalty('player1', 'DNF')">DNF</button>
+          <button class="btn btn-success flex-1" @click="setPenalty('player1', null)">OK</button>
+          <button class="btn btn-warning flex-1" @click="setPenalty('player1', '+2')">+2</button>
+          <button class="btn btn-error flex-1" @click="setPenalty('player1', 'DNF')">DNF</button>
         </div>
       </template>
     </TwoSideModal>

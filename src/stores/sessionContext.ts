@@ -5,6 +5,7 @@ import { createStatsSchema, type StatsSchema } from '../models/StatsSchema'
 import { compareSolves, type Solve } from '../models/Solve'
 import type { Side } from '../models/Side'
 import { puzzlesMap, type EventContext } from '../lib/puzzlesMap'
+import type { Penalty } from '../models/Penalty'
 
 export type RoundContext = {
   id: number
@@ -94,6 +95,13 @@ export const useSessionContext = defineStore('sessionContext', () => {
       })
   }
 
+  // Edit penalty of previous round
+  function setPenalty(player: Side, penalty: Penalty | null) {
+    if (rounds.value.length === 0) return
+    const [round] = rounds.value.slice(-1)
+    round.solves[player]!.penalty = penalty
+  }
+
   // Reset race with a new puzzle
   function startNewRace(event: string) {
     eventContext.value = puzzlesMap[event]
@@ -114,6 +122,7 @@ export const useSessionContext = defineStore('sessionContext', () => {
     recordSolve,
     concludeRound,
     startNewRound,
+    setPenalty,
     startNewRace
   }
 })

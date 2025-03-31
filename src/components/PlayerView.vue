@@ -24,14 +24,6 @@ function onScrambleClick() {
   emit('scramble-clicked')
 }
 
-const dummyStats = {
-  'avg5': 10353,
-  'avg12': 10353,
-  'avg25': 10353,
-  'avg50': 10353,
-  'avg100': 10353,
-}
-
 </script>
 
 <template>
@@ -51,7 +43,7 @@ const dummyStats = {
         class="grow flex justify-center items-center" @timer-stopped="(e) => raceContext.recordSolve(side, e)"
         ref="timer" />
       <StatsCollapse :blocked="timerRef?.isBusy ?? false" :solves="raceContext.rounds.map(r => r.solves[side]!)"
-        :stats="dummyStats" ref="collapse" />
+        :stats="raceContext.stats[side].computedStats" ref="collapse" />
     </div>
   </div>
 </template>

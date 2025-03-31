@@ -6,6 +6,12 @@ import { compareSolves, type Solve } from '../models/Solve'
 import type { Side } from '../models/Side'
 import { puzzlesMap, type EventContext } from '../lib/puzzlesMap'
 import type { Penalty } from '../models/Penalty'
+import {
+  addSolve,
+  computeStats,
+  createStatsContext,
+  type StatsContext
+} from '../models/StatsContext'
 
 export type RoundContext = {
   id: number
@@ -58,6 +64,12 @@ export const useRaceContext = defineStore('raceContext', () => {
   // All previous rounds
   const rounds = ref<RoundContext[]>([])
 
+  // Stats
+  const stats = ref<Record<Side, StatsContext>>({
+    player1: createStatsContext(statsSchema),
+    player2: createStatsContext(statsSchema)
+  })
+
   // Score
   const score = computed(() => {
     const player1Score = rounds.value.filter((r) => r.winner === 'player1').length
@@ -87,6 +99,14 @@ export const useRaceContext = defineStore('raceContext', () => {
     )
 
     rounds.value.push(currentRound.value)
+
+    // Update stats
+    stats.value.player1 = computeStats(
+      addSolve(stats.value.player1, currentRound.value.solves.player1!)
+    )
+    stats.value.player2 = computeStats(
+      addSolve(stats.value.player2, currentRound.value.solves.player2!)
+    )
   }
 
   // New round
@@ -123,6 +143,7 @@ export const useRaceContext = defineStore('raceContext', () => {
   return {
     eventContext,
     rounds,
+    stats,
     score,
     currentRound,
     recordSolve,

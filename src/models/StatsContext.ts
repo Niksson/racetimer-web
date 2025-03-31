@@ -1,5 +1,6 @@
 import { computeMean, computeAverage, selectBestOrWorst } from '../lib/stats'
-import type { StatsResult } from './StatsResult'
+import type { Solve } from './Solve'
+import { toStatsResult, type StatsResult } from './StatsResult'
 import type { StatsSchema } from './StatsSchema'
 
 export type ComputedStats = Record<string, StatsResult | null>
@@ -22,7 +23,14 @@ export function createStatsContext(schema: StatsSchema): StatsContext {
   }
 }
 
-export function computeStats(context: StatsContext): ComputedStats {
+export function addSolve(context: StatsContext, solve: Solve): StatsContext {
+  const result = toStatsResult(solve)
+  context.results.push(result)
+
+  return context
+}
+
+export function computeStats(context: StatsContext): StatsContext {
   const [newResult] = context.results.slice(-1)
   const newComputedStats = {} as ComputedStats
   for (const key in context.schema) {
@@ -39,5 +47,7 @@ export function computeStats(context: StatsContext): ComputedStats {
     newComputedStats[key] = selectBestOrWorst(item, computed, previous)
   }
 
-  return newComputedStats
+  context.computedStats = newComputedStats
+
+  return context
 }

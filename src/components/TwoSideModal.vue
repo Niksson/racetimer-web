@@ -10,11 +10,11 @@ defineExpose({
 
 <template>
   <dialog id="modal" class="modal grid-rows-2" ref="modal">
-    <div class="modal-box player2" @click.stop="modal?.close()">
+    <div class="modal-box player2" @touchend.stop="modal?.close()">
       <slot name="modal-content"></slot>
       <slot name="player2"></slot>
     </div>
-    <div class="modal-box row-start-2" @click.stop="modal?.close()">
+    <div class="modal-box row-start-2" @touchend.stop="modal?.close()">
       <slot name="modal-content"></slot>
       <slot name="player1"></slot>
     </div>

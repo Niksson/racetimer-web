@@ -48,7 +48,7 @@ defineExpose({
 </script>
 
 <template>
-  <div @touchstart.stop.prevent="putHandsDown" @touchend.stop.prevent="raiseHandsUp" class="timer"
+  <div @touchstart.prevent="putHandsDown" @touchend.prevent="raiseHandsUp" class="timer"
     :class="`timer-${actor.snapshot.value.value}`">
     <span v-if="!showPrevRound">{{
       formatDuration(actor.snapshot.value.context.elapsedTimeMs) }}</span>

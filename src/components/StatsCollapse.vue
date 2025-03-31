@@ -46,14 +46,14 @@ const successfulSolves = computed(() => solves.filter(solve => solve.penalty !==
 <template>
   <div id="stats-box" class="relative">
     <div class="bg-base-300 p-3 invisible">STATS</div>
-    <div class="bg-base-300 p-3 absolute bottom-0 left-0 w-full z-10" @click.stop="toggle">
+    <div class="bg-base-300 p-3 absolute bottom-0 left-0 w-full z-10" @touchend.stop="toggle">
       <div class="text-center font-bold">STATS
         <ChevronUp class="inline" v-if="!isOpen" />
         <ChevronDown class="inline" v-else />
       </div>
       <Transition name="stats-collapse" @before-enter="collapseBeforeEnter" @enter="collapseEnter"
         @leave="collapseLeave">
-        <div @click.stop="close" v-if="isOpen">
+        <div @touchend.stop="close" v-if="isOpen">
           <div class=" divider my-1" />
           <StatsList :stats="stats" :successful-solves="successfulSolves" :total-solves="totalSolves" />
           <RouterLink to="/solves" custom v-slot="{ navigate }">

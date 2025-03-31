@@ -10,7 +10,7 @@ defineExpose({
 
 <template>
   <dialog id="modal" class="modal" ref="modal">
-    <div class="modal-box" @click.stop="modal?.close()">
+    <div class="modal-box" @touchend.stop="modal?.close()">
       <slot></slot>
     </div>
     <form method="dialog" class="modal-backdrop">

@@ -10,6 +10,8 @@ import FullScreenModal from '../components/FullScreenModal.vue';
 import { useSessionContext } from '../stores/sessionContext';
 
 const sessionContextStore = useSessionContext()
+const withScramble = Object.entries(puzzlesMap).filter(([_, value]) => value.generateScramble)
+const withoutScramble = Object.entries(puzzlesMap).filter(([_, value]) => !value.generateScramble)
 
 const scrambleModal = useTemplateRef('scramble-modal')
 function openScrambleModal() {
@@ -36,9 +38,14 @@ function togglePenalty(player: Side, penalty: Penalty | null) { }
     </div>
     <PlayerView side="player1" @scramble-clicked="openScrambleModal" />
     <FullScreenModal ref="puzzles-modal">
-      <div class="m-4 flex flex-wrap gap-3 justify-center items-center">
+      <div class="m-4 flex flex-wrap gap-3 place-items-center">
         <button @click="sessionContextStore.startNewRace(key)" class="btn btn-primary px-3 grow"
-          v-for="(value, key) in puzzlesMap" :key="key">{{ value.displayName }}</button>
+          v-for="[key, value] in withScramble" :key="key">{{ value.displayName }}</button>
+      </div>
+      <div class="divider">Without random scramble</div>
+      <div class="m-4 flex flex-wrap gap-3 place-items-center">
+        <button @click="sessionContextStore.startNewRace(key)" class="btn btn-primary px-3 grow"
+          v-for="[key, value] in withoutScramble" :key="key">{{ value.displayName }}</button>
       </div>
     </FullScreenModal>
     <TwoSideModal ref="scramble-modal">

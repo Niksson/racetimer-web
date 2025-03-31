@@ -1,58 +1,87 @@
 export const puzzlesMap: Record<string, EventContext> = {
-  '222': {
+  '2x2x2': {
     eventId: '222',
     displayName: '2x2x2',
-    scrambleSize: 'text-xl'
+    scrambleSize: 'text-xl',
+    generateScramble: true
   },
-  '333': {
+  '3x3x3': {
     eventId: '333',
     displayName: '3x3x3',
-    scrambleSize: 'text-xl'
+    scrambleSize: 'text-xl',
+    generateScramble: true
   },
-  '444': {
+  '4x4x4': {
     eventId: '444',
     displayName: '4x4x4',
-    scrambleSize: 'text-lg'
+    scrambleSize: 'text-lg',
+    generateScramble: true
   },
-  '555': {
+  '5x5x5': {
     eventId: '555',
     displayName: '5x5x5',
-    scrambleSize: 'text-md'
+    scrambleSize: 'text-md',
+    generateScramble: true
   },
-  '666': {
+  '6x6x6': {
     eventId: '666',
     displayName: '6x6x6',
-    scrambleSize: 'text-sm'
+    scrambleSize: 'text-sm',
+    generateScramble: true
   },
-  '777': {
+  '7x7x7': {
     eventId: '777',
     displayName: '7x7x7',
-    scrambleSize: 'text-sm'
+    scrambleSize: 'text-sm',
+    generateScramble: true
   },
-  pyram: {
+  Pyraminx: {
     eventId: 'pyram',
     displayName: 'Pyraminx',
-    scrambleSize: 'text-xl'
+    scrambleSize: 'text-xl',
+    generateScramble: true
   },
-  sq1: {
+  'Square-1': {
     eventId: 'sq1',
     displayName: 'Square-1',
-    scrambleSize: 'text-xl'
+    scrambleSize: 'text-xl',
+    generateScramble: true
   },
-  skewb: {
+  Skewb: {
     eventId: 'skewb',
     displayName: 'Skewb',
-    scrambleSize: 'text-xl'
+    scrambleSize: 'text-xl',
+    generateScramble: true
   },
-  clock: {
+  Clock: {
     eventId: 'clock',
     displayName: 'Clock',
-    scrambleSize: 'text-md'
+    scrambleSize: 'text-md',
+    generateScramble: true
   },
-  minx: {
+  Megaminx: {
     eventId: 'minx',
     displayName: 'Megaminx',
-    scrambleSize: 'text-xs'
+    scrambleSize: 'text-xs',
+    generateScramble: true
+  },
+  '6x6x6 (No scramble)': {
+    eventId: '666',
+    displayName: '6x6x6 (No scramble)',
+    scrambleSize: 'text-sm',
+    generateScramble: false
+  },
+  '7x7x7 (No scramble)': {
+    eventId: '777',
+    displayName: '7x7x7 (No scramble)',
+    scrambleSize: 'text-sm',
+    generateScramble: false
+  },
+  'Megaminx (No scramble)': {
+    eventId: 'minx',
+    displayName: 'Megaminx (No scramble)',
+    scrambleSize: 'text-xs',
+    generateScramble: false
   }
 }
 
@@ -60,4 +89,5 @@ export type EventContext = {
   eventId: string
   displayName: string
   scrambleSize: string
+  generateScramble: boolean
 }

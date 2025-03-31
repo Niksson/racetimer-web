@@ -39,7 +39,7 @@ const statsSchema: StatsSchema = createStatsSchema({
 
 export const useSessionContext = defineStore('sessionContext', () => {
   // Event ID
-  const eventContext = ref<EventContext>(puzzlesMap['333'])
+  const eventContext = ref<EventContext>(puzzlesMap['3x3x3'])
 
   // Initial round context
   const currentRound = ref<RoundContext>(createRoundContext(1))
@@ -88,9 +88,10 @@ export const useSessionContext = defineStore('sessionContext', () => {
     // Set up new round
     currentRound.value = createRoundContext(currentRound.value.id + 1, currentRound.value.scramble)
 
-    randomScrambleForEvent(eventContext.value.eventId).then((scramble) => {
-      currentRound.value.scramble = scramble.toString()
-    })
+    if (eventContext.value.generateScramble)
+      randomScrambleForEvent(eventContext.value.eventId).then((scramble) => {
+        currentRound.value.scramble = scramble.toString()
+      })
   }
 
   // Reset race with a new puzzle
@@ -99,9 +100,10 @@ export const useSessionContext = defineStore('sessionContext', () => {
     rounds.value = []
 
     currentRound.value = createRoundContext(1)
-    randomScrambleForEvent(eventContext.value.eventId).then((scramble) => {
-      currentRound.value.scramble = scramble.toString()
-    })
+    if (eventContext.value.generateScramble)
+      randomScrambleForEvent(eventContext.value.eventId).then((scramble) => {
+        currentRound.value.scramble = scramble.toString()
+      })
   }
 
   return {

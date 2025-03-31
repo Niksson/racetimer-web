@@ -43,6 +43,7 @@ const dummyStats = {
         <span v-if="sessionContext.currentRound.scramble" :class="[sessionContext.eventContext.scrambleSize]"
           @click="onScrambleClick">{{
             sessionContext.currentRound.scramble }}</span>
+        <span v-else-if="!sessionContext.eventContext.generateScramble" class="text-xl">Hand scramble</span>
         <span v-else class="text-xl">Generating...</span>
       </div>
       <VirtualTimer class="grow flex justify-center items-center"

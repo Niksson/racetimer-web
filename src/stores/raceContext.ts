@@ -27,6 +27,13 @@ const createRoundContext = (
   winner: null
 })
 
+const determineWinner = (p1Solve: Solve, p2Solve: Solve): Side | null => {
+  const comparison = compareSolves(p1Solve, p2Solve)
+  if (comparison < 0) return 'player1'
+  else if (comparison > 0) return 'player2'
+  return null
+}
+
 const statsSchema: StatsSchema = createStatsSchema({
   averageTrimPercent: 5,
   items: {
@@ -74,12 +81,10 @@ export const useRaceContext = defineStore('raceContext', () => {
 
   function concludeRound() {
     // Tally the score
-    const comparison = compareSolves(
+    currentRound.value.winner = determineWinner(
       currentRound.value.solves.player1!,
       currentRound.value.solves.player2!
     )
-    if (comparison < 0) currentRound.value.winner = 'player1'
-    else if (comparison > 0) currentRound.value.winner = 'player2'
 
     rounds.value.push(currentRound.value)
   }
@@ -100,6 +105,7 @@ export const useRaceContext = defineStore('raceContext', () => {
     if (rounds.value.length === 0) return
     const [round] = rounds.value.slice(-1)
     round.solves[player]!.penalty = penalty
+    round.winner = determineWinner(round.solves.player1!, round.solves.player2!)
   }
 
   // Reset race with a new puzzle

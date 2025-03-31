@@ -9,7 +9,7 @@ import { puzzlesMap } from '../lib/puzzlesMap';
 import FullScreenModal from '../components/FullScreenModal.vue';
 import { useRaceContext } from '../stores/raceContext';
 
-const raceContextStore = useRaceContext()
+const raceContext = useRaceContext()
 const withScramble = Object.entries(puzzlesMap).filter(([_, value]) => value.generateScramble)
 const withoutScramble = Object.entries(puzzlesMap).filter(([_, value]) => !value.generateScramble)
 
@@ -23,7 +23,7 @@ const puzzlesModal = useTemplateRef('puzzles-modal')
 const penaltyModal = useTemplateRef('penalty-modal')
 
 function setPenalty(player: Side, penalty: Penalty | null) {
-  raceContextStore.setPenalty(player, penalty)
+  raceContext.setPenalty(player, penalty)
   penaltyModal?.value?.modal?.close()
 }
 
@@ -43,20 +43,21 @@ function setPenalty(player: Side, penalty: Penalty | null) {
     <PlayerView side="player1" @scramble-clicked="openScrambleModal" />
     <FullScreenModal ref="puzzles-modal">
       <div class="m-4 flex flex-wrap gap-3 place-items-center">
-        <button @click="raceContextStore.startNewRace(key)" class="btn btn-primary px-3 grow"
+        <button @click="raceContext.startNewRace(key)" class="btn btn-primary px-3 grow"
           v-for="[key, value] in withScramble" :key="key">{{ value.displayName }}</button>
       </div>
       <div class="divider">Without random scramble</div>
       <div class="m-4 flex flex-wrap gap-3 place-items-center">
-        <button @click="raceContextStore.startNewRace(key)" class="btn btn-primary px-3 grow"
+        <button @click="raceContext.startNewRace(key)" class="btn btn-primary px-3 grow"
           v-for="[key, value] in withoutScramble" :key="key">{{ value.displayName }}</button>
       </div>
     </FullScreenModal>
     <TwoSideModal ref="scramble-modal">
       <template #modal-content>
         <div class="flex place-content-center">
-          <div class="text-lg" v-if="!raceContextStore.currentRound.scramble">Generating...</div>
-          <scramble-display v-else event="333" :scramble="raceContextStore.currentRound.scramble" />
+          <div class="text-lg" v-if="!raceContext.currentRound.scramble">Generating...</div>
+          <scramble-display v-else :event="raceContext.eventContext.eventId"
+            :scramble="raceContext.currentRound.scramble" />
         </div>
       </template>
     </TwoSideModal>

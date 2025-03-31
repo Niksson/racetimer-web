@@ -3,6 +3,11 @@ import { useMachine } from '@xstate/vue';
 import { timerMachine } from '../stateMachines/timerMachine';
 import { formatDuration } from '../lib/durationFormat';
 import { computed } from 'vue';
+import { toString, type Solve } from '../models/Solve';
+
+const { prevRoundSolve } = defineProps<{
+  prevRoundSolve?: Solve
+}>()
 
 const emit = defineEmits<{
   'timer-stopped': [elapsedTimeMs: number]
@@ -13,6 +18,11 @@ const actor = useMachine(timerMachine)
 const isBusy = computed(() => {
   const state = actor.snapshot.value.value
   return state === 'waiting' || state === 'standby' || state === 'running-tick' || state === 'running-tock'
+})
+
+const showPrevRound = computed(() => {
+  const state = actor.snapshot.value.value
+  return prevRoundSolve && (state === 'ready' || state === 'waiting' || state === 'standby')
 })
 
 function unblock() {
@@ -39,6 +49,9 @@ defineExpose({
 
 <template>
   <div @touchstart.stop.prevent="putHandsDown" @touchend.stop.prevent="raiseHandsUp" class="timer"
-    :class="`timer-${actor.snapshot.value.value}`">{{
-      formatDuration(actor.snapshot.value.context.elapsedTimeMs) }}</div>
+    :class="`timer-${actor.snapshot.value.value}`">
+    <span v-if="!showPrevRound">{{
+      formatDuration(actor.snapshot.value.context.elapsedTimeMs) }}</span>
+    <span v-else>{{ toString(prevRoundSolve!) }}</span>
+  </div>
 </template>

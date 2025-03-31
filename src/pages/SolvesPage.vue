@@ -1,8 +1,8 @@
 <script setup lang="ts">
 import { toString } from '../models/Solve';
-import { useSessionContext } from '../stores/sessionContext';
+import { useRaceContext } from '../stores/raceContext';
 
-const sessionContext = useSessionContext();
+const raceContext = useRaceContext();
 
 </script>
 
@@ -11,7 +11,7 @@ const sessionContext = useSessionContext();
     <div class="player2 flex flex-col overflow-hidden">
       <div class="p-1 text-center text-lg font-semibold border-b-1 border-neutral-600">SOLVES</div>
       <ol class="grow solves-list list-inside list-decimal overflow-scroll">
-        <li v-for="round in sessionContext.rounds" :key="round.id" class="border-b-1 p-1 border-neutral-600"><span
+        <li v-for="round in raceContext.rounds" :key="round.id" class="border-b-1 p-1 border-neutral-600"><span
             class="mx-1 font-semibold">{{ toString(round.solves.player2!) }}</span> {{ round.scramble }}</li>
       </ol>
     </div>
@@ -25,7 +25,7 @@ const sessionContext = useSessionContext();
     <div class="flex flex-col overflow-hidden">
       <div class="p-1 text-center text-lg font-semibold border-b-1 border-neutral-600">SOLVES</div>
       <ol class="grow solves-list list-inside list-decimal overflow-scroll">
-        <li v-for="round in sessionContext.rounds" :key="round.id" class="border-b-1 p-1 border-neutral-600"><span
+        <li v-for="round in raceContext.rounds" :key="round.id" class="border-b-1 p-1 border-neutral-600"><span
             class="mx-1 font-semibold">{{ toString(round.solves.player1!) }}</span> {{ round.scramble }}</li>
       </ol>
     </div>

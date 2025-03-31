@@ -10,7 +10,7 @@ import type { Penalty } from '../models/Penalty'
 export type RoundContext = {
   id: number
   scramble?: string
-  solves: Record<Side, Solve | null>
+  solves: Record<Side, Solve | undefined>
   winner: Side | null
 }
 
@@ -21,8 +21,8 @@ const createRoundContext = (
   id: id,
   scramble: scramlbe,
   solves: {
-    player1: null,
-    player2: null
+    player1: undefined,
+    player2: undefined
   },
   winner: null
 })
@@ -38,7 +38,7 @@ const statsSchema: StatsSchema = createStatsSchema({
   }
 })
 
-export const useSessionContext = defineStore('sessionContext', () => {
+export const useRaceContext = defineStore('raceContext', () => {
   // Event ID
   const eventContext = ref<EventContext>(puzzlesMap['3x3x3'])
 

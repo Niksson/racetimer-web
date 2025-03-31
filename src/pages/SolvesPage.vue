@@ -1,5 +1,9 @@
 <script setup lang="ts">
-const range: number[] = [...Array(100).keys()];
+import { toString } from '../models/Solve';
+import { useSessionContext } from '../stores/sessionContext';
+
+const sessionContext = useSessionContext();
+
 </script>
 
 <template>
@@ -7,11 +11,8 @@ const range: number[] = [...Array(100).keys()];
     <div class="player2 flex flex-col overflow-hidden">
       <div class="p-1 text-center text-lg font-semibold border-b-1 border-neutral-600">SOLVES</div>
       <ol class="grow solves-list list-inside list-decimal overflow-scroll">
-        <li v-for="i in range" :key="i" class="border-b-1 p-1 border-neutral-600"><span
-            class="mx-1 font-semibold">0.190</span> B' D2 L F2
-          B' D' R2 D2
-          R2 B2 L' D2 R F2 U2
-          R2 D L'</li>
+        <li v-for="round in sessionContext.rounds" :key="round.id" class="border-b-1 p-1 border-neutral-600"><span
+            class="mx-1 font-semibold">{{ toString(round.solves.player2!) }}</span> {{ round.scramble }}</li>
       </ol>
     </div>
     <div class="divider-custom">
@@ -24,11 +25,8 @@ const range: number[] = [...Array(100).keys()];
     <div class="flex flex-col overflow-hidden">
       <div class="p-1 text-center text-lg font-semibold border-b-1 border-neutral-600">SOLVES</div>
       <ol class="grow solves-list list-inside list-decimal overflow-scroll">
-        <li v-for="i in range" :key="i" class="border-b-1 p-1 border-neutral-600"><span
-            class="mx-1 font-semibold">0.190</span> B' D2 L F2
-          B' D' R2 D2
-          R2 B2 L' D2 R F2 U2
-          R2 D L'</li>
+        <li v-for="round in sessionContext.rounds" :key="round.id" class="border-b-1 p-1 border-neutral-600"><span
+            class="mx-1 font-semibold">{{ toString(round.solves.player1!) }}</span> {{ round.scramble }}</li>
       </ol>
     </div>
   </div>

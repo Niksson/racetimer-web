@@ -19,6 +19,10 @@ function openScrambleModal() {
 }
 
 const puzzlesModal = useTemplateRef('puzzles-modal')
+function onEventChoice(event: string) {
+  raceContext.startNewRace(event)
+  puzzlesModal?.value?.modal?.close()
+}
 
 const penaltyModal = useTemplateRef('penalty-modal')
 
@@ -43,13 +47,13 @@ function setPenalty(player: Side, penalty: Penalty | null) {
     <PlayerView side="player1" @scramble-clicked="openScrambleModal" />
     <FullScreenModal ref="puzzles-modal">
       <div class="m-4 flex flex-wrap gap-3 place-items-center">
-        <button @click="raceContext.startNewRace(key)" class="btn btn-primary px-3 grow"
-          v-for="[key, value] in withScramble" :key="key">{{ value.displayName }}</button>
+        <button @click="onEventChoice(key)" class="btn btn-primary px-3 grow" v-for="[key, value] in withScramble"
+          :key="key">{{ value.displayName }}</button>
       </div>
       <div class="divider">Without random scramble</div>
       <div class="m-4 flex flex-wrap gap-3 place-items-center">
-        <button @click="raceContext.startNewRace(key)" class="btn btn-primary px-3 grow"
-          v-for="[key, value] in withoutScramble" :key="key">{{ value.displayName }}</button>
+        <button @click="onEventChoice(key)" class="btn btn-primary px-3 grow" v-for="[key, value] in withoutScramble"
+          :key="key">{{ value.displayName }}</button>
       </div>
     </FullScreenModal>
     <TwoSideModal ref="scramble-modal">

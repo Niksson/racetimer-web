@@ -4,7 +4,6 @@ import App from './App.vue'
 import { createRouter, createWebHashHistory } from 'vue-router'
 import TimerPage from './pages/TimerPage.vue'
 import { createPinia } from 'pinia'
-import piniaPluginPersistedstate from 'pinia-plugin-persistedstate'
 
 const router = createRouter({
   history: createWebHashHistory(),
@@ -22,6 +21,5 @@ router.afterEach((to, from) => {
 })
 
 const pinia = createPinia()
-pinia.use(piniaPluginPersistedstate)
 
 createApp(App).use(router).use(pinia).mount('#app')

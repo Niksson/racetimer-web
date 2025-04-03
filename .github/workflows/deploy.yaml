@@ -36,8 +36,7 @@ jobs:
       - name: Build the app
         run: pnpm build
 
-      - uses: actions/checkout@v4
-      - name: Deploy
+      - name: Deploy to cloud pages
         uses: cloudflare/wrangler-action@v3
         with:
           apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}

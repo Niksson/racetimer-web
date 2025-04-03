@@ -37,14 +37,6 @@ function collapseLeave(el: Element) {
   const element = el as HTMLElement
   element.style.height = '0px';
   element.style.overflow = 'hidden';
-
-  // Workaround for Safari repainting issue
-  requestAnimationFrame(() => {
-    element.style.display = 'none';
-    requestAnimationFrame(() => {
-      element.style.display = '';
-    });
-  })
 }
 
 const totalSolves = computed(() => solves.length)

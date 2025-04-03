@@ -24,6 +24,8 @@
 
 .player2 {
   transform: rotate(180deg);
+  /* Workaround for Safari repainting issue */
+  will-change: transform;
 }
 
 .divider-custom {

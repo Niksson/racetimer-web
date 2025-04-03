@@ -37,6 +37,7 @@ export default defineConfig({
 
       manifest: {
         name: 'RaceTimer',
+        display: 'standalone',
         short_name: 'RaceTimer',
         description: 'RaceTimer - Speedcubing timer to race with your friends',
         theme_color: '#15191e'

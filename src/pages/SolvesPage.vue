@@ -7,7 +7,7 @@ const raceContext = useRaceContext();
 </script>
 
 <template>
-  <div id="solves-page" class="unselectable grid grid-rows-[1fr_auto_1fr] h-screen w-full">
+  <div id="solves-page">
     <div class="player2 flex flex-col overflow-hidden">
       <div class="p-1 text-center text-lg font-semibold border-b-1 border-neutral-600">SOLVES</div>
       <ol class="grow solves-list list-inside list-decimal overflow-scroll">

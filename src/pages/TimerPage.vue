@@ -34,7 +34,7 @@ function setPenalty(player: Side, penalty: Penalty | null) {
 </script>
 
 <template>
-  <div id="timer-page" class="unselectable grid grid-rows-[1fr_auto_1fr] h-screen w-full">
+  <div id="timer-page">
     <PlayerView side="player2" @scramble-clicked="openScrambleModal" class="player2" />
     <div class="divider-custom">
       <div class="divider-content absolute w-full -top-5 flex justify-between">

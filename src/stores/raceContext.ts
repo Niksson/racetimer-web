@@ -51,105 +51,116 @@ const statsSchema: StatsSchema = createStatsSchema({
   }
 })
 
-export const useRaceContext = defineStore('raceContext', () => {
-  // Event ID
-  const eventContext = ref<EventContext>(puzzlesMap['3x3x3'])
+export const useRaceContext = defineStore(
+  'raceContext',
+  () => {
+    // Event ID
+    const eventContext = ref<EventContext>(puzzlesMap['3x3x3'])
 
-  // Initial round context
-  const currentRound = ref<RoundContext>(createRoundContext(1))
-  randomScrambleForEvent(eventContext.value.eventId).then((scramble) => {
-    currentRound.value.scramble = scramble.toString()
-  })
+    // Initial round context
+    const currentRound = ref<RoundContext>(createRoundContext(1))
+    randomScrambleForEvent(eventContext.value.eventId).then((scramble) => {
+      currentRound.value.scramble = scramble.toString()
+    })
 
-  // All previous rounds
-  const rounds = ref<RoundContext[]>([])
+    // All previous rounds
+    const rounds = ref<RoundContext[]>([])
 
-  // Stats
-  const stats = ref<Record<Side, StatsContext>>({
-    player1: createStatsContext(statsSchema),
-    player2: createStatsContext(statsSchema)
-  })
+    // Stats
+    const stats = ref<Record<Side, StatsContext>>({
+      player1: createStatsContext(statsSchema),
+      player2: createStatsContext(statsSchema)
+    })
 
-  // Score
-  const score = computed(() => {
-    const player1Score = rounds.value.filter((r) => r.winner === 'player1').length
-    const player2Score = rounds.value.filter((r) => r.winner === 'player2').length
+    // Score
+    const score = computed(() => {
+      const player1Score = rounds.value.filter((r) => r.winner === 'player1').length
+      const player2Score = rounds.value.filter((r) => r.winner === 'player2').length
 
-    return { player1: player1Score, player2: player2Score }
-  })
+      return { player1: player1Score, player2: player2Score }
+    })
 
-  // Recording round results
-  function recordSolve(player: Side, elapsedTimeMs: number) {
-    const solve = {
-      timeMs: elapsedTimeMs,
-      penalty: null
+    // Recording round results
+    function recordSolve(player: Side, elapsedTimeMs: number) {
+      const solve = {
+        timeMs: elapsedTimeMs,
+        penalty: null
+      }
+      currentRound.value.solves[player] = solve
+      if (currentRound.value.solves.player1 && currentRound.value.solves.player2) {
+        concludeRound()
+        startNewRound()
+      }
     }
-    currentRound.value.solves[player] = solve
-    if (currentRound.value.solves.player1 && currentRound.value.solves.player2) {
-      concludeRound()
-      startNewRound()
+
+    function concludeRound() {
+      // Tally the score
+      currentRound.value.winner = determineWinner(
+        currentRound.value.solves.player1!,
+        currentRound.value.solves.player2!
+      )
+
+      rounds.value.push(currentRound.value)
+
+      // Update stats
+      stats.value.player1 = computeStats(
+        addSolve(stats.value.player1, currentRound.value.solves.player1!)
+      )
+      stats.value.player2 = computeStats(
+        addSolve(stats.value.player2, currentRound.value.solves.player2!)
+      )
+    }
+
+    // New round
+    function startNewRound() {
+      // Set up new round
+      currentRound.value = createRoundContext(
+        currentRound.value.id + 1,
+        currentRound.value.scramble
+      )
+
+      if (eventContext.value.generateScramble)
+        randomScrambleForEvent(eventContext.value.eventId).then((scramble) => {
+          currentRound.value.scramble = scramble.toString()
+        })
+    }
+
+    // Edit penalty of previous round
+    function setPenalty(player: Side, penalty: Penalty | null) {
+      if (rounds.value.length === 0) return
+      const [round] = rounds.value.slice(-1)
+      round.solves[player]!.penalty = penalty
+      round.winner = determineWinner(round.solves.player1!, round.solves.player2!)
+    }
+
+    // Reset race with a new puzzle
+    function startNewRace(event: string) {
+      eventContext.value = puzzlesMap[event]
+      rounds.value = []
+
+      currentRound.value = createRoundContext(1)
+      if (eventContext.value.generateScramble)
+        randomScrambleForEvent(eventContext.value.eventId).then((scramble) => {
+          currentRound.value.scramble = scramble.toString()
+        })
+    }
+
+    return {
+      eventContext,
+      rounds,
+      stats,
+      score,
+      currentRound,
+      recordSolve,
+      concludeRound,
+      startNewRound,
+      setPenalty,
+      startNewRace
+    }
+  },
+  {
+    persist: {
+      pick: ['eventContext', 'rounds', 'stats']
     }
   }
-
-  function concludeRound() {
-    // Tally the score
-    currentRound.value.winner = determineWinner(
-      currentRound.value.solves.player1!,
-      currentRound.value.solves.player2!
-    )
-
-    rounds.value.push(currentRound.value)
-
-    // Update stats
-    stats.value.player1 = computeStats(
-      addSolve(stats.value.player1, currentRound.value.solves.player1!)
-    )
-    stats.value.player2 = computeStats(
-      addSolve(stats.value.player2, currentRound.value.solves.player2!)
-    )
-  }
-
-  // New round
-  function startNewRound() {
-    // Set up new round
-    currentRound.value = createRoundContext(currentRound.value.id + 1, currentRound.value.scramble)
-
-    if (eventContext.value.generateScramble)
-      randomScrambleForEvent(eventContext.value.eventId).then((scramble) => {
-        currentRound.value.scramble = scramble.toString()
-      })
-  }
-
-  // Edit penalty of previous round
-  function setPenalty(player: Side, penalty: Penalty | null) {
-    if (rounds.value.length === 0) return
-    const [round] = rounds.value.slice(-1)
-    round.solves[player]!.penalty = penalty
-    round.winner = determineWinner(round.solves.player1!, round.solves.player2!)
-  }
-
-  // Reset race with a new puzzle
-  function startNewRace(event: string) {
-    eventContext.value = puzzlesMap[event]
-    rounds.value = []
-
-    currentRound.value = createRoundContext(1)
-    if (eventContext.value.generateScramble)
-      randomScrambleForEvent(eventContext.value.eventId).then((scramble) => {
-        currentRound.value.scramble = scramble.toString()
-      })
-  }
-
-  return {
-    eventContext,
-    rounds,
-    stats,
-    score,
-    currentRound,
-    recordSolve,
-    concludeRound,
-    startNewRound,
-    setPenalty,
-    startNewRace
-  }
-})
+)

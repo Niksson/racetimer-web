@@ -34,8 +34,17 @@ function collapseEnter(el: Element) {
 }
 
 function collapseLeave(el: Element) {
-  (el as HTMLElement).style.height = '0px';
-  (el as HTMLElement).style.overflow = 'hidden';
+  const element = el as HTMLElement
+  element.style.height = '0px';
+  element.style.overflow = 'hidden';
+
+  // Workaround for Safari repainting issue
+  requestAnimationFrame(() => {
+    element.style.display = 'none';
+    requestAnimationFrame(() => {
+      element.style.display = '';
+    });
+  })
 }
 
 const totalSolves = computed(() => solves.length)

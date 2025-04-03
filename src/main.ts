@@ -1,16 +1,15 @@
 import { createApp } from 'vue'
-import './style.css'
+import './assets/style.css'
 import App from './App.vue'
 import { createRouter, createWebHashHistory } from 'vue-router'
 import TimerPage from './pages/TimerPage.vue'
-import SolvesPage from './pages/SolvesPage.vue'
 import { createPinia } from 'pinia'
 
 const router = createRouter({
   history: createWebHashHistory(),
   routes: [
     { path: '/', component: TimerPage },
-    { path: '/solves', component: SolvesPage }
+    { path: '/solves', component: () => import('./pages/SolvesPage.vue') }
   ]
 })
 

@@ -6,6 +6,12 @@ import tailwindcss from '@tailwindcss/vite'
 import VueDevTools from 'vite-plugin-vue-devtools'
 
 export default defineConfig({
+  build: {
+    rollupOptions: {
+      external: [/tests/]
+    },
+    chunkSizeWarningLimit: 600
+  },
   test: {
     environment: 'jsdom',
     globals: true,

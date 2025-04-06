@@ -26,13 +26,13 @@ export const puzzlesMap: Record<string, EventContext> = {
   '6x6x6': {
     eventId: '666',
     displayName: '6x6x6',
-    scrambleSize: 'text-sm md:text-md',
+    scrambleSize: 'text-xs md:text-md',
     generateScramble: true
   },
   '7x7x7': {
     eventId: '777',
     displayName: '7x7x7',
-    scrambleSize: 'text-sm md:text-md',
+    scrambleSize: 'text-xs md:text-md',
     generateScramble: true
   },
   Pyraminx: {

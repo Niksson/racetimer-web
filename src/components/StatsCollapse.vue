@@ -45,7 +45,7 @@ const successfulSolves = computed(() => solves.filter(solve => solve.penalty !==
 </script>
 
 <template>
-  <div id="stats-box" class="relative">
+  <div id="stats-box" class="relative stats-collapse" :aria-expanded="isOpen">
     <div class="bg-base-300 p-3 invisible">STATS</div>
     <div class="bg-base-300 p-3 absolute bottom-0 left-0 w-full z-10" @touchend.stop="toggle">
       <div class="text-center font-bold">STATS

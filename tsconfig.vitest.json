@@ -1,7 +1,7 @@
 {
   "extends": "./tsconfig.app.json",
-  "include": ["tests/**/*.ts"],
-  "exclude": ["tests/e2e/**/*"],
+  "include": ["tests/**/*"],
+  "exclude": [],
   "compilerOptions": {
     "tsBuildInfoFile": "./node_modules/.tmp/tsconfig.vitest.tsbuildinfo",
     "lib": [],

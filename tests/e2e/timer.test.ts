@@ -1,5 +1,5 @@
 import { test, expect } from '@playwright/test'
-import { startTouchingElement, stopTouchingElement, touchAndReleaseElement } from './helpers/touch'
+import { startTouchingElement, stopTouchingElement, tapElement } from './helpers/touch'
 import { locateStats } from './helpers/statsCollapse'
 import { locateTimer, startTimer, stopTimer } from './helpers/timer'
 
@@ -37,7 +37,7 @@ test.describe("Timer logic", () => {
     await startTouchingElement(player1Timer)
     await page.waitForTimeout(400)
     await stopTouchingElement(player1Timer)
-    await touchAndReleaseElement(player1Timer)
+    await tapElement(player1Timer)
     expect(await player1Timer.textContent()).not.toBe('0.000')
 
   })
@@ -73,7 +73,7 @@ test.describe("Timer logic", () => {
 
     await startTimer(player1Timer)
     await page.waitForTimeout(1000) // wait for 1 second
-    await touchAndReleaseElement(player1Stats)
+    await tapElement(player1Stats)
     expect(await player1Stats.getAttribute('aria-expanded')).toBe('false')
   })
 })

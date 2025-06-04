@@ -47,7 +47,9 @@ export default defineConfig({
         ? {
             wsEndpoint: 'ws://localhost:3000/'
           }
-        : undefined
+        : undefined,
+
+    video: process.env.CI ? 'retain-on-failure' : 'off',
   },
 
   /* Configure projects for major browsers */

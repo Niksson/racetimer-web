@@ -1,15 +1,29 @@
 import { test, expect } from '@playwright/test'
 
-test.describe("Players' view", () => {
-  test.beforeEach(async ({ page, browser }) => {
+test.describe("Initial app state", () => {
+  test.beforeEach(async ({ page }) => {
     await page.goto('./')
-    await page.waitForTimeout(5000)
+    await page.waitForTimeout(500)
   })
 
   test('both players have a timer', async ({ page }) => {
-    const timers = page.locator('.timer')
+    const timersLocator = page.locator('.timer')
+    const timers = await timersLocator.all()
 
-    expect(await timers.all()).toHaveLength(2)
+    expect(timers).toHaveLength(2)
+    for (const timer of timers) {
+      expect(await timer.textContent()).toBe('0.000')
+    }
+  })
+
+  test('both stats collapse are collapsed', async ({ page }) => {
+    const statsCollapse = page.locator('.stats-collapse')
+    const stats = await statsCollapse.all()
+
+    expect(stats).toHaveLength(2)
+    for (const stat of stats) {
+      expect(await stat.getAttribute('aria-expanded')).toBe('false')
+    }
   })
 
   test('both players have a scramble', async ({ page }) => {
@@ -19,9 +33,9 @@ test.describe("Players' view", () => {
   })
 
   test('both players have stats', async ({ page }) => {
-    const scrambles = page.locator('.stats-collapse')
+    const statsCollapse = page.locator('.stats-collapse')
 
-    expect(await scrambles.all()).toHaveLength(2)
+    expect(await statsCollapse.all()).toHaveLength(2)
   })
 
   test('both players can expand their stats', async ({ page }) => {

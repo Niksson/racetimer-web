@@ -7,7 +7,7 @@ type Context = {
   startDate?: Date
   elapsedTimeMs: number
 }
-type Emits = { type: 'timer-stopped'; elapsedTimeMs: number }
+type Emits = { type: 'timer-stopped'; elapsedTimeMs: number } | { type: 'timer-started' }
 
 export const timerMachine = setup({
   types: {
@@ -31,6 +31,7 @@ export const timerMachine = setup({
         elapsedTimeMs: diff
       }
     }),
+    timerStarted: emit({type: 'timer-started'}),
     timerStopped: emit(({ context }) => {
       return {
         type: 'timer-stopped',
@@ -61,7 +62,7 @@ export const timerMachine = setup({
       on: {
         handsUp: {
           target: 'running-tick',
-          actions: 'setStartDate'
+          actions: ['setStartDate', 'timerStarted']
         }
       }
     },

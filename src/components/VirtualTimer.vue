@@ -10,6 +10,7 @@ const { prevRoundSolve } = defineProps<{
 }>()
 
 const emit = defineEmits<{
+  'timer-started': [],
   'timer-stopped': [elapsedTimeMs: number]
 }>()
 
@@ -28,6 +29,11 @@ const showPrevRound = computed(() => {
 function unblock() {
   actor.send({ type: 'unblock' })
 }
+
+actor.actorRef.on('timer-started', () => {
+  console.log('Timer started')
+  emit('timer-started')
+})
 
 actor.actorRef.on('timer-stopped', (e) => {
   emit('timer-stopped', e.elapsedTimeMs)

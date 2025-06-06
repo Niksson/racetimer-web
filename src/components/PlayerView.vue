@@ -44,7 +44,7 @@ function onScrambleClick() {
         <span v-else class="text-xl">Generating...</span>
       </div>
       <VirtualTimer :prev-round-solve="last(raceContext.rounds)?.solves[side]"
-        class="grow flex justify-center items-center" @timer-stopped="(e) => raceContext.recordSolve(side, e)"
+        class="grow flex justify-center items-center" @timer-started="raceContext.currentRound.roundStarted = true" @timer-stopped="(e) => raceContext.recordSolve(side, e)"
         ref="timer" />
       <StatsCollapse :blocked="!!timerRef?.isBusy" :solves="raceContext.rounds.map(r => r.solves[side]!)"
         :stats="raceContext.stats[side].computedStats" ref="collapse" />

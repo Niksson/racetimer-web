@@ -23,11 +23,11 @@ test.describe('New race modal functionality', () => {
     expect(await score.textContent()).toMatch(/0\s*:\s*0/);
   })
 
-  test.skip('starting a new race is not possible before both players complete the round', async ({ page }) => {
+  test('starting a new race is not possible before both players complete the round', async ({ page }) => {
     const player1Timer = await locateElement(page, 'player1', '.timer');
     await startAndStopTimer(player1Timer, 100);
 
     const newRaceButton = page.getByRole('button', { name: 'New race' });
-    expect( newRaceButton).toBeDisabled();
+    expect(newRaceButton).not.toBeVisible();
   })
 })

@@ -19,6 +19,7 @@ export type RoundContext = {
   scramble?: string
   solves: Record<Side, Solve | undefined>
   winner: Side | null
+  roundStarted: boolean
 }
 
 const createRoundContext = (
@@ -31,7 +32,8 @@ const createRoundContext = (
     player1: undefined,
     player2: undefined
   },
-  winner: null
+  winner: null,
+  roundStarted: false,
 })
 
 const determineWinner = (p1Solve: Solve, p2Solve: Solve): Side | null => {

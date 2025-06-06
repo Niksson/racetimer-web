@@ -42,29 +42,23 @@ test.describe("Timer logic", () => {
 
   })
 
-  test.skip('middle buttons must be disabled when any timer is running', async ({page}) => {
+  test('middle buttons must not be visible until round is completed', async ({page}) => {
     const player1Timer = await locateTimer(page, 'player1')
     const player2Timer = await locateTimer(page, 'player2')
     const newRaceButton = page.locator('button#new-race')
     const penaltyButton = page.locator('button#penalty')
 
     await startTimer(player1Timer, 1)
-    expect(await newRaceButton.isDisabled()).toBeTruthy()
-    expect(await penaltyButton.isDisabled()).toBeTruthy()
-
     await page.waitForTimeout(1000) // wait for 1 second
     await stopTimer(player1Timer, 1)
-    expect(await newRaceButton.isDisabled()).toBeFalsy()
-    expect(await penaltyButton.isDisabled()).toBeFalsy()
+    expect(newRaceButton).not.toBeVisible()
+    expect(penaltyButton).not.toBeVisible()
 
     await startTimer(player2Timer, 2)
-    expect(await newRaceButton.isDisabled()).toBeTruthy()
-    expect(await penaltyButton.isDisabled()).toBeTruthy()
-
     await page.waitForTimeout(1000) // wait for 1 second
     await stopTimer(player2Timer, 2)
-    expect(await newRaceButton.isDisabled()).toBeFalsy()
-    expect(await penaltyButton.isDisabled()).toBeFalsy()
+    expect(newRaceButton).toBeVisible()
+    expect(penaltyButton).toBeVisible()
   })
 
   test('stats collapse must not be expanded when a timer is running', async ({ page }) => {

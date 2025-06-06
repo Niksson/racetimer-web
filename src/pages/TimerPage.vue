@@ -15,6 +15,7 @@ const withoutScramble = Object.entries(puzzlesMap).filter(([_, value]) => !value
 
 const scrambleModal = useTemplateRef('scramble-modal')
 function openScrambleModal() {
+  if(raceContext.currentRound.roundStarted) return
   scrambleModal?.value?.modal?.showModal()
 }
 
@@ -38,9 +39,11 @@ function setPenalty(player: Side, penalty: Penalty | null) {
     <PlayerView side="player2" @scramble-clicked="openScrambleModal" class="player2" />
     <div class="divider-custom">
       <div class="divider-content absolute w-full -top-5 flex justify-between">
-        <button id="new-race" class="ml-6 w-24 text-xs btn btn-outline bg-base-100" @click="puzzlesModal?.modal?.showModal">NEW
+        <button :disabled="raceContext.currentRound.roundStarted" id="new-race" class="ml-6 w-24 text-xs btn btn-outline bg-base-100"
+        :class="{'hidden': raceContext.currentRound.roundStarted}" @click="puzzlesModal?.modal?.showModal">NEW
           RACE</button>
-        <button id="penalty" class="mr-6 w-24 text-xs btn btn-outline bg-base-100"
+        <button :disabled="raceContext.currentRound.roundStarted" id="penalty" class="mr-6 w-24 text-xs btn btn-outline bg-base-100"
+          :class="{'hidden': raceContext.currentRound.roundStarted}" 
           @click="penaltyModal?.modal?.showModal">PENALTY</button>
       </div>
     </div>

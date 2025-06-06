@@ -1,5 +1,5 @@
 import { test, expect } from '@playwright/test';
-import { locateTimer, startAndStopTimer } from './helpers/timer';
+import { simulateRound } from './helpers/timer';
 import { locateElement } from './helpers/element';
 import { assignPenalty } from './helpers/penalty';
 
@@ -17,14 +17,8 @@ test.describe('Scoring', () => {
     }
   })
 
-  test.skip('score is awarded to p1 if p1 is faster', async ({ page }) => {
-    const player1Timer = await locateTimer(page, 'player1')
-    const player2Timer = await locateTimer(page, 'player2')
-
-    await Promise.all([
-      startAndStopTimer(player1Timer, 1000),
-      startAndStopTimer(player2Timer, 2000)
-    ])
+  test('score is awarded to p1 if p1 is faster', async ({ page }) => {
+    await simulateRound(page, 1000, 2000);
 
     const player1Score = await locateElement(page, 'player1', '.score');
     expect(await player1Score.textContent()).toMatch(/1\s*:\s*0/);
@@ -32,14 +26,8 @@ test.describe('Scoring', () => {
     expect(await player2Score.textContent()).toMatch(/0\s*:\s*1/);
   })
 
-  test.skip('score is awarded to p2 if p2 is faster', async ({ page }) => {
-    const player1Timer = await locateTimer(page, 'player1')
-    const player2Timer = await locateTimer(page, 'player2')
-
-    await Promise.all([
-      startAndStopTimer(player1Timer, 2000),
-      startAndStopTimer(player2Timer, 1000)
-    ])
+  test('score is awarded to p2 if p2 is faster', async ({ page }) => {
+    await simulateRound(page, 2000, 1000);
 
     const player1Score = await locateElement(page, 'player1', '.score');
     expect(await player1Score.textContent()).toMatch(/0\s*:\s*1/);
@@ -48,13 +36,7 @@ test.describe('Scoring', () => {
   })
 
   test('score is recalculated if a player sets +2 penalty', async ({page}) => {
-    const player1Timer = await locateTimer(page, 'player1')
-    const player2Timer = await locateTimer(page, 'player2')
-
-    await Promise.all([
-      startAndStopTimer(player1Timer, 1000),
-      startAndStopTimer(player2Timer, 2000)
-    ])
+    await simulateRound(page, 1000, 2000);
 
     const player1Score = await locateElement(page, 'player1', '.score');
     expect(await player1Score.textContent()).toMatch(/1\s*:\s*0/);
@@ -64,13 +46,7 @@ test.describe('Scoring', () => {
   })
 
   test('score is recalculated if a player sets DNF penalty', async ({page}) => {
-    const player1Timer = await locateTimer(page, 'player1')
-    const player2Timer = await locateTimer(page, 'player2')
-
-    await Promise.all([
-      startAndStopTimer(player1Timer, 1000),
-      startAndStopTimer(player2Timer, 2000)
-    ])
+    await simulateRound(page, 1000, 2000);
 
     const player1Score = await locateElement(page, 'player1', '.score');
     expect(await player1Score.textContent()).toMatch(/1\s*:\s*0/);
@@ -80,13 +56,7 @@ test.describe('Scoring', () => {
   })
 
   test('no one gets a score if both players set the result to DNF', async ({page}) => {
-    const player1Timer = await locateTimer(page, 'player1')
-    const player2Timer = await locateTimer(page, 'player2')
-
-    await Promise.all([
-      startAndStopTimer(player1Timer, 1000),
-      startAndStopTimer(player2Timer, 2000)
-    ])
+    await simulateRound(page, 100, 200);
 
     const player1Score = await locateElement(page, 'player1', '.score');
     expect(await player1Score.textContent()).toMatch(/1\s*:\s*0/);

@@ -23,3 +23,16 @@ export async function startAndStopTimer(locator: Locator, duration: number, iden
   await locator.page().waitForTimeout(duration)
   await stopTimer(locator, identifier)
 }
+
+export async function simulateRound(page: Page, p1Time: number, p2Time: number) {
+  const player1Timer = await locateTimer(page, 'player1')
+  const player2Timer = await locateTimer(page, 'player2')
+
+  await Promise.all([
+    startAndStopTimer(player1Timer, p1Time, 0),
+    startAndStopTimer(player2Timer, p2Time, 1)
+  ])
+
+  // Wait for the timers to update
+  await page.waitForTimeout(100)
+}

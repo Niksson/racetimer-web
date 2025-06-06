@@ -11,3 +11,12 @@ export async function locatePenaltyAssignButton(page: Page, side: Side, penaltyB
   const penaltyAssignButton = await getByText(page, side, penaltyButtonText)
   return penaltyAssignButton
 }
+
+export async function assignPenalty(page: Page, side: Side, penaltyButtonText: string) {
+  const penaltyButton = await locatePenaltyButton(page)
+  await penaltyButton.click()
+  await page.waitForTimeout(50) // Wait for the button to be ready
+
+  const penaltyAssignButton = await locatePenaltyAssignButton(page, side, penaltyButtonText)
+  await penaltyAssignButton.click()
+}

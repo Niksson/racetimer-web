@@ -30,6 +30,13 @@ export function addSolve(context: StatsContext, solve: Solve): StatsContext {
   return context
 }
 
+export function replaceLastSolve(context: StatsContext, solve: Solve): StatsContext {
+  const result = toStatsResult(solve)
+  context.results[context.results.length - 1] = result
+
+  return context
+}
+
 export function computeStats(context: StatsContext): StatsContext {
   const [newResult] = context.results.slice(-1)
   const newComputedStats = {} as ComputedStats

@@ -9,6 +9,7 @@ import {
   addSolve,
   computeStats,
   createStatsContext,
+  replaceLastSolve,
   type StatsContext
 } from '../models/StatsContext'
 import { useStorage } from '@vueuse/core'
@@ -124,10 +125,13 @@ export const useRaceContext = defineStore('raceContext', () => {
 
   // Edit penalty of previous round
   function setPenalty(player: Side, penalty: Penalty | null) {
+    console.log(rounds.value.length)
     if (rounds.value.length === 0) return
     const [round] = rounds.value.slice(-1)
     round.solves[player]!.penalty = penalty
     round.winner = determineWinner(round.solves.player1!, round.solves.player2!)
+    console.log('recalculating stats for', player, round.solves[player])
+    computeStats(replaceLastSolve(stats.value[player], round.solves[player]!))
   }
 
   // Reset race with a new puzzle

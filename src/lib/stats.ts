@@ -7,6 +7,7 @@ export function computeAverage(item: StatsSchemaItem, results: StatsResult[]): S
     if (results.length < item.number!) return null
     else pickedResults = results.slice(-item.number!)
   } else pickedResults = results
+  console.log('pickedResults', pickedResults)
 
   const trimAmount = Math.ceil((pickedResults.length * item.averageTrimPercent!) / 100)
   if (pickedResults.length < 2 * trimAmount) return null

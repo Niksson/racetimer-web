@@ -44,15 +44,6 @@ const determineWinner = (p1Solve: Solve, p2Solve: Solve): Side | null => {
   return null
 }
 
-const createInitialRound = (eventId: string)=> ({
-    eventContext: puzzlesMap['3x3x3'] as EventContext,
-    rounds: [] as RoundContext[],
-    stats: {
-      player1: createStatsContext(statsSchema),
-      player2: createStatsContext(statsSchema)
-    } as Record<Side, StatsContext>
-  })
-
 
 export const useRaceContext = defineStore('raceContext', () => {
   // Event ID

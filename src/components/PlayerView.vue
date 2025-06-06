@@ -20,6 +20,7 @@ watch(() => raceContext.currentRound.id, () => {
 const emit = defineEmits(['scramble-clicked'])
 
 function onScrambleClick() {
+  console.log('scramble clicked')
   if (collapse?.value?.isOpen) return
   emit('scramble-clicked')
 }
@@ -28,12 +29,15 @@ function onScrambleClick() {
 
 <template>
   <div :id="side" @touchend.stop.prevent="collapse?.close()" class="flex gap-3 flex-col">
-    <div class="score">{{ raceContext.score.player1 }} : <span class="text-accent">{{
-      raceContext.score.player2 }}</span>
+    <div v-if="side === 'player1'" class="score"><span class="text-accent">{{raceContext.score.player1 }} </span> : {{
+      raceContext.score.player2 }}
+    </div>
+    <div v-else class="score"><span class="text-accent">{{raceContext.score.player2 }} </span> : {{
+      raceContext.score.player1 }}
     </div>
     <div class="grow flex flex-col justify-between relative">
-      <div class="mx-3 text-center">
-        <span v-if="raceContext.currentRound.scramble" class="scramble" :class="[raceContext.eventContext.scrambleSize]"
+      <div class="scramble mx-3 text-center">
+        <span v-if="raceContext.currentRound.scramble" :class="[raceContext.eventContext.scrambleSize]"
           @touchend="onScrambleClick">{{
             raceContext.currentRound.scramble }}</span>
         <span v-else-if="!raceContext.eventContext.generateScramble" class="text-xl">Hand scramble</span>

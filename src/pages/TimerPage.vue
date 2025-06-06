@@ -38,9 +38,9 @@ function setPenalty(player: Side, penalty: Penalty | null) {
     <PlayerView side="player2" @scramble-clicked="openScrambleModal" class="player2" />
     <div class="divider-custom">
       <div class="divider-content absolute w-full -top-5 flex justify-between">
-        <button id="new-race" class="ml-8 w-32 text-lg h-10 btn btn-outline bg-base-100" @click="puzzlesModal?.modal?.showModal">NEW
+        <button id="new-race" class="ml-6 w-24 text-xs btn btn-outline bg-base-100" @click="puzzlesModal?.modal?.showModal">NEW
           RACE</button>
-        <button id="penalty" class="mr-8 w-32 text-lg h-10 btn btn-outline bg-base-100"
+        <button id="penalty" class="mr-6 w-24 text-xs btn btn-outline bg-base-100"
           @click="penaltyModal?.modal?.showModal">PENALTY</button>
       </div>
     </div>

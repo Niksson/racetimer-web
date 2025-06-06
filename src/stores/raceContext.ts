@@ -1,7 +1,6 @@
 import { defineStore } from 'pinia'
 import { computed, ref } from 'vue'
 import { randomScrambleForEvent } from 'cubing/scramble'
-import { createStatsSchema, type StatsSchema } from '../models/StatsSchema'
 import { compareSolves, type Solve } from '../models/Solve'
 import type { Side } from '../models/Side'
 import { puzzlesMap, type EventContext } from '../lib/puzzlesMap'
@@ -13,6 +12,7 @@ import {
   type StatsContext
 } from '../models/StatsContext'
 import { useStorage } from '@vueuse/core'
+import { statsSchema } from '../lib/appStatsSchema'
 
 export type RoundContext = {
   id: number
@@ -41,16 +41,7 @@ const determineWinner = (p1Solve: Solve, p2Solve: Solve): Side | null => {
   return null
 }
 
-const statsSchema: StatsSchema = createStatsSchema({
-  averageTrimPercent: 5,
-  items: {
-    avg5: { type: 'current', metric: 'average', scope: 'number', number: 5 },
-    avg12: { type: 'current', metric: 'average', scope: 'number', number: 12 },
-    avg25: { type: 'current', metric: 'average', scope: 'number', number: 25 },
-    avg50: { type: 'current', metric: 'average', scope: 'number', number: 50 },
-    avg100: { type: 'current', metric: 'average', scope: 'number', number: 100 }
-  }
-})
+
 
 export const useRaceContext = defineStore('raceContext', () => {
   const storageRef = useStorage('raceContext', {

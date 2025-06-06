@@ -4,8 +4,11 @@ import { locatePenaltyAssignButton, locatePenaltyButton } from './helpers/penalt
 
 test.describe('Penalties', () => {
   test.beforeEach(async ({ page }) => {
-    await page.goto('./');
-    await page.waitForTimeout(500);
+    await page.goto('/')
+    await page.waitForTimeout(100)
+    await page.evaluate(() => localStorage.setItem('doNotShowPwaPromptAgain', 'true'))
+    await page.reload()
+    await page.waitForTimeout(500)
   })
 
   test('player can assign a +2 penalty', async({page}) => {

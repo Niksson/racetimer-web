@@ -5,7 +5,11 @@ import { assignPenalty } from './helpers/penalty';
 
 test.describe('Scoring', () => {
   test.beforeEach(async ({ page }) => {
-    await page.goto('/scoring');
+    await page.goto('/')
+    await page.waitForTimeout(100)
+    await page.evaluate(() => localStorage.setItem('doNotShowPwaPromptAgain', 'true'))
+    await page.reload()
+    await page.waitForTimeout(500)
   });
 
   test('initial score must be 0:0 for both players', async ({ page }) => {

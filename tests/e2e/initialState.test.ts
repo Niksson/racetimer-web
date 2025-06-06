@@ -2,7 +2,10 @@ import { test, expect } from '@playwright/test'
 
 test.describe("Initial app state", () => {
   test.beforeEach(async ({ page }) => {
-    await page.goto('./')
+    await page.goto('/')
+    await page.waitForTimeout(100)
+    await page.evaluate(() => localStorage.setItem('doNotShowPwaPromptAgain', 'true'))
+    await page.reload()
     await page.waitForTimeout(500)
   })
 

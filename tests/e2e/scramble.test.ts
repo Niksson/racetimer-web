@@ -4,8 +4,11 @@ import { puzzlesMap } from '../../src/lib/puzzlesMap';
 
 test.describe('Scramble display', () => {
   test.beforeEach(async ({ page }) => {
-    await page.goto('/scramble');
-    await page.waitForTimeout(1000);
+    await page.goto('/')
+    await page.waitForTimeout(100)
+    await page.evaluate(() => localStorage.setItem('doNotShowPwaPromptAgain', 'true'))
+    await page.reload()
+    await page.waitForTimeout(500)
   });
 
   test('a scramble element is present for each player', async ({ page }) => {

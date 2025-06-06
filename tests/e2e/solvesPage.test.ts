@@ -5,8 +5,11 @@ import { assignPenalty } from './helpers/penalty';
 
 test.describe('Solves page functionality', () => {
   test.beforeEach(async ({ page }) => {
-    await page.goto('/');
-    await page.waitForTimeout(500);
+    await page.goto('/')
+    await page.waitForTimeout(100)
+    await page.evaluate(() => localStorage.setItem('doNotShowPwaPromptAgain', 'true'))
+    await page.reload()
+    await page.waitForTimeout(2000)
   })
 
   test('solves list is shown for both players', async ({ page }) => {

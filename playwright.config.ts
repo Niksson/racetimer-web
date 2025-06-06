@@ -49,7 +49,8 @@ export default defineConfig({
           }
         : undefined,
 
-    video: process.env.CI ? 'retain-on-failure' : 'off',
+    //video: process.env.CI ? 'retain-on-failure' : 'off',
+    video: 'retain-on-failure'
   },
 
   /* Configure projects for major browsers */

@@ -6,13 +6,15 @@ import { locateTimer, startTimer, stopTimer } from './helpers/timer'
 test.describe("Timer logic", () => {
   test.beforeEach(async ({page}) => {
     await page.goto('/')
+    await page.waitForTimeout(100)
+    await page.evaluate(() => localStorage.setItem('doNotShowPwaPromptAgain', 'true'))
+    await page.reload()
     await page.waitForTimeout(500)
   })
 
   test('both players can start and stop their timers', async ({ page }) => {
     const player1Timer = await locateTimer(page, 'player1')
     const player2Timer = await locateTimer(page, 'player2')
-    console.log('Player 1 Timer:', await player1Timer.textContent())
 
     await startTimer(player1Timer, 1)
     await startTimer(player2Timer, 2)
@@ -45,8 +47,8 @@ test.describe("Timer logic", () => {
   test('middle buttons must not be visible until round is completed', async ({page}) => {
     const player1Timer = await locateTimer(page, 'player1')
     const player2Timer = await locateTimer(page, 'player2')
-    const newRaceButton = page.locator('button#new-race')
-    const penaltyButton = page.locator('button#penalty')
+    const newRaceButton = page.getByRole('button', {name: 'New race'})
+    const penaltyButton = page.getByRole('button', {name: 'Penalty'})
 
     await startTimer(player1Timer, 1)
     await page.waitForTimeout(1000) // wait for 1 second
@@ -57,6 +59,7 @@ test.describe("Timer logic", () => {
     await startTimer(player2Timer, 2)
     await page.waitForTimeout(1000) // wait for 1 second
     await stopTimer(player2Timer, 2)
+    await page.waitForTimeout(100) // wait for a short time to ensure UI updates
     expect(newRaceButton).toBeVisible()
     expect(penaltyButton).toBeVisible()
   })

@@ -5,8 +5,11 @@ import { locateElement } from './helpers/element';
 
 test.describe('New race modal functionality', () => {
   test.beforeEach(async ({ page }) => {
-    await page.goto('/');
-    await page.waitForTimeout(500);
+    await page.goto('/')
+    await page.waitForTimeout(100)
+    await page.evaluate(() => localStorage.setItem('doNotShowPwaPromptAgain', 'true'))
+    await page.reload()
+    await page.waitForTimeout(500)
   });
   
   test('starting a new race resets the score', async ({ page }) => {

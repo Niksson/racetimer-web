@@ -6,8 +6,11 @@ import { assignPenalty } from './helpers/penalty';
 
 test.describe("Stats collapse functionality", () => {
   test.beforeEach(async ({ page }) => {
-    await page.goto('./');
-    await page.waitForTimeout(500);
+    await page.goto('/')
+    await page.waitForTimeout(100)
+    await page.evaluate(() => localStorage.setItem('doNotShowPwaPromptAgain', 'true'))
+    await page.reload()
+    await page.waitForTimeout(500)
   });
 
   test('both players can expand their stats', async ({ page }) => {

@@ -43,10 +43,7 @@ const determineWinner = (p1Solve: Solve, p2Solve: Solve): Side | null => {
   return null
 }
 
-
-
-export const useRaceContext = defineStore('raceContext', () => {
-  const storageRef = useStorage('raceContext', {
+const createInitialRound = (eventId: string)=> ({
     eventContext: puzzlesMap['3x3x3'] as EventContext,
     rounds: [] as RoundContext[],
     stats: {
@@ -54,14 +51,20 @@ export const useRaceContext = defineStore('raceContext', () => {
       player2: createStatsContext(statsSchema)
     } as Record<Side, StatsContext>
   })
+
+
+export const useRaceContext = defineStore('raceContext', () => {
   // Event ID
-  const eventContext = ref(storageRef.value.eventContext)
+  const eventContext = useStorage('raceContext.eventContext', puzzlesMap['3x3x3'] as EventContext)
 
   // All previous rounds
-  const rounds = ref(storageRef.value.rounds)
+  const rounds = useStorage('raceContext.rounds', [] as RoundContext[])
 
   // Stats
-  const stats = ref(storageRef.value.stats)
+  const stats = useStorage('raceContext.stats', {
+    player1: createStatsContext(statsSchema),
+    player2: createStatsContext(statsSchema)
+  } as Record<Side, StatsContext>)
 
   // Initial round context
   const currentRound = ref<RoundContext>(createRoundContext(1))
@@ -131,6 +134,10 @@ export const useRaceContext = defineStore('raceContext', () => {
   function startNewRace(event: string) {
     eventContext.value = puzzlesMap[event]
     rounds.value = []
+    stats.value = {
+      player1: createStatsContext(statsSchema),
+      player2: createStatsContext(statsSchema)
+    }
 
     currentRound.value = createRoundContext(1)
     if (eventContext.value.generateScramble)

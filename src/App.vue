@@ -33,7 +33,7 @@ onMounted(() => {
 <template>
   <RouterView v-slot="{ Component, route }">
     <Transition :name="route.meta.transition as string">
-      <Component :is="Component" class="unselectable grid grid-rows-[1fr_auto_1fr] h-svh w-full" />
+      <Component :is="Component" class="unselectable" />
     </Transition>
   </RouterView>
   <FullScreenModal ref='noTouchModal' class="text-center">

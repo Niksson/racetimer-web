@@ -11,11 +11,9 @@ defineExpose({
 <template>
   <dialog id="modal" class="modal grid-rows-2" ref="modal">
     <div class="modal-box player2" @click="modal?.close()">
-      <slot name="modal-content"></slot>
       <slot name="player2"></slot>
     </div>
     <div class="modal-box row-start-2" @click="modal?.close()">
-      <slot name="modal-content"></slot>
       <slot name="player1"></slot>
     </div>
     <form method="dialog" class="modal-backdrop row-span-2 row-start-1">

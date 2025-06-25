@@ -5,7 +5,7 @@ import PlayerView from '../components/PlayerView.vue';
 import TwoSideModal from '../components/TwoSideModal.vue';
 import type { Side } from '../models/Side';
 import type { Penalty } from '../models/Penalty';
-import { puzzlesMap } from '../lib/puzzlesMap';
+import { eventsMap } from '../lib/eventsMap';
 import FullScreenModal from '../components/FullScreenModal.vue';
 import { useRaceContext } from '../stores/raceContext';
 import RaceTimerLogo from '../components/RaceTimerLogo.vue';
@@ -13,18 +13,18 @@ import RaceTimerLogo from '../components/RaceTimerLogo.vue';
 const menuOpened = ref<boolean>(false)
 
 const raceContext = useRaceContext()
-const withScramble = Object.entries(puzzlesMap).filter(([_, value]) => value.generateScramble)
-const withoutScramble = Object.entries(puzzlesMap).filter(([_, value]) => !value.generateScramble)
+const withScramble = Object.entries(eventsMap).filter(([_, value]) => value.generateScramble)
+const withoutScramble = Object.entries(eventsMap).filter(([_, value]) => !value.generateScramble)
 
 const scrambleModal = useTemplateRef('scramble-modal')
 function openScrambleModal() {
-  if (raceContext.currentRound.roundStarted) return
+  if (raceContext.roundStarted) return
   scrambleModal?.value?.modal?.showModal()
 }
 
 const puzzlesModal = useTemplateRef('puzzles-modal')
 function onEventChoice(event: string) {
-  raceContext.startNewRace(event)
+  raceContext.startNewSession({selectedEvents: { player1: event, player2: event}})
   puzzlesModal?.value?.modal?.close()
 }
 
@@ -47,18 +47,20 @@ function onNewRace() {
     <input id="menu-drawer" type="checkbox" class="drawer-toggle" v-model="menuOpened" />
     <div class="drawer-content">
       <div id="timer-page" class="grid grid-rows-[1fr_auto_1fr] h-svh w-full">
-        <PlayerView side="player2" @scramble-clicked="openScrambleModal" class="player2" />
+        <div v-if="raceContext.sessionLoading" class="player2 flex items-center justify-center">Loading...</div>
+        <PlayerView v-else side="player2" @scramble-clicked="openScrambleModal" class="player2" />
         <div class="divider-custom">
           <div class="divider-content absolute w-full -top-5 flex justify-between">
             <label for="menu-drawer" id="menu" class="ml-6 w-24 text-xs btn btn-outline bg-base-100"
-              :class="{ 'hidden': raceContext.currentRound.roundStarted }">MENU</label>
-            <button :disabled="raceContext.currentRound.roundStarted" id="penalty"
+              :class="{ 'hidden': raceContext.roundStarted }">MENU</label>
+            <button :disabled="raceContext.roundStarted" id="penalty"
               class="mr-6 w-24 text-xs btn btn-outline bg-base-100"
-              :class="{ 'hidden': raceContext.currentRound.roundStarted }"
+              :class="{ 'hidden': raceContext.roundStarted }"
               @click="penaltyModal?.modal?.showModal">PENALTY</button>
           </div>
         </div>
-        <PlayerView side="player1" @scramble-clicked="openScrambleModal" />
+        <div v-if="raceContext.sessionLoading" class="flex items-center justify-center">Loading...</div>
+        <PlayerView v-else side="player1" @scramble-clicked="openScrambleModal" />
         <FullScreenModal ref="puzzles-modal">
           <div class="m-4 flex flex-wrap gap-3 place-items-center">
             <button @click="onEventChoice(key)" class="btn btn-primary px-3 grow" v-for="[key, value] in withScramble"
@@ -70,12 +72,19 @@ function onNewRace() {
               v-for="[key, value] in withoutScramble" :key="key">{{ value.displayName }}</button>
           </div>
         </FullScreenModal>
-        <TwoSideModal ref="scramble-modal">
-          <template #modal-content>
+        <TwoSideModal v-if="!raceContext.sessionLoading" ref="scramble-modal">
+          <template #player2>
             <div class="flex place-content-center">
-              <div class="text-lg" v-if="!raceContext.currentRound.scramble">Generating...</div>
-              <scramble-display v-else :event="raceContext.eventContext.eventId"
-                :scramble="raceContext.currentRound.scramble" />
+              <div class="text-lg" v-if="raceContext.scramblesGenerating">Generating...</div>
+              <scramble-display v-else :event="raceContext.session!.selectedEvents.player2.eventId"
+                :scramble="raceContext.currentRound.scramble.player2" />
+            </div>
+          </template>
+          <template #player1>
+            <div class="flex place-content-center">
+              <div class="text-lg" v-if="raceContext.scramblesGenerating">Generating...</div>
+              <scramble-display v-else :event="raceContext.session!.selectedEvents.player1.eventId"
+                :scramble="raceContext.currentRound.scramble.player1" />
             </div>
           </template>
         </TwoSideModal>

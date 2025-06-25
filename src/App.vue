@@ -17,6 +17,7 @@ function closePwaPrompt() {
   showPwaPrompt.value = false
 }
 
+
 onMounted(() => {
   if (!('ontouchstart' in window) &&
     !(navigator.maxTouchPoints > 0)) {

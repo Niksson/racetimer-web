@@ -1,0 +1,71 @@
+import type { Round } from './Round'
+import type { Event } from './Event'
+import type { Side } from './Side'
+import type { SessionCreationOptions } from './SessionCreationOptions'
+import { createStatsContext as createEmptyStatsContext, type StatsContext } from './StatsContext'
+import { statsSchema } from '../lib/appStatsSchema'
+import { createStatsSchema } from './StatsSchema'
+import { del, get, keys, set } from 'idb-keyval'
+import { eventsMap } from '../lib/eventsMap'
+
+export type Session = {
+  id?: string
+  name?: string
+  playerNames: Record<Side, string | undefined>
+  createdDate: Date
+  selectedEvents: Record<Side, Event>
+  completedRounds: Round[]
+  stats: Record<Side, StatsContext>
+}
+
+export function createSession(options: SessionCreationOptions = {}): Session {
+  const createStats = (): StatsContext => {
+    return createEmptyStatsContext(createStatsSchema({ averageTrimPercent: 5, items: statsSchema }))
+  }
+
+  const {
+    playerNames = { player1: undefined, player2: undefined },
+    name,
+    selectedEvents = {
+      player1: '333',
+      player2: '333'
+    }
+  } = options
+
+  return {
+    name,
+    playerNames,
+    createdDate: new Date(),
+    selectedEvents: {
+      player1: eventsMap[selectedEvents.player1],
+      player2: eventsMap[selectedEvents.player2]
+    },
+    completedRounds: [],
+    stats: {
+      player1: createStats(),
+      player2: createStats()
+    }
+  }
+}
+
+export async function getSession(sessionId: string): Promise<Session> {
+  const session = await get<Session>(sessionId)
+  if (!session) {
+    throw new Error(`Session with ID ${sessionId} not found`)
+  }
+  return session
+}
+
+export async function saveSession(session: Session): Promise<void> {
+  if (!session.id) {
+    const idbKeys = await keys()
+    const keyCount = idbKeys.length
+    session.id = `session-${keyCount + 1}`
+  }
+
+  await set(session.id, session)
+}
+
+export async function deleteSession(sessionId: string): Promise<void> {
+  await del(sessionId)
+}

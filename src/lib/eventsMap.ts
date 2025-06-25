@@ -1,93 +1,89 @@
-export const puzzlesMap: Record<string, EventContext> = {
-  '2x2x2': {
+import type { Event } from '../models/Event';
+
+export const eventsMap: Record<string, Event> = {
+  '222': {
     eventId: '222',
     displayName: '2x2x2',
-    scrambleSize: 'text-xl md:text-2xl',
+    scrambleClasses: 'text-xl md:text-2xl',
     generateScramble: true
   },
-  '3x3x3': {
+  '333': {
     eventId: '333',
     displayName: '3x3x3',
-    scrambleSize: 'text-xl md:text-2xl',
+    scrambleClasses: 'text-xl md:text-2xl',
     generateScramble: true
   },
-  '4x4x4': {
+  '444': {
     eventId: '444',
     displayName: '4x4x4',
-    scrambleSize: 'text-lg md:text-xl',
+    scrambleClasses: 'text-lg md:text-xl',
     generateScramble: true
   },
-  '5x5x5': {
+  '555': {
     eventId: '555',
     displayName: '5x5x5',
-    scrambleSize: 'text-md md:text-lg',
+    scrambleClasses: 'text-md md:text-lg',
     generateScramble: true
   },
-  '6x6x6': {
+  '666': {
     eventId: '666',
     displayName: '6x6x6',
-    scrambleSize: 'text-xs md:text-md',
+    scrambleClasses: 'text-xs md:text-md',
     generateScramble: true
   },
-  '7x7x7': {
+  '777': {
     eventId: '777',
     displayName: '7x7x7',
-    scrambleSize: 'text-xs md:text-md',
+    scrambleClasses: 'text-xs md:text-md',
     generateScramble: true
   },
-  Pyraminx: {
+  pyram: {
     eventId: 'pyram',
     displayName: 'Pyraminx',
-    scrambleSize: 'text-xl md:text-2xl',
+    scrambleClasses: 'text-xl md:text-2xl',
     generateScramble: true
   },
-  'Square-1': {
+  'sq1': {
     eventId: 'sq1',
     displayName: 'Square-1',
-    scrambleSize: 'text-xl md:text-2xl',
+    scrambleClasses: 'text-xl md:text-2xl',
     generateScramble: true
   },
-  Skewb: {
+  skewb: {
     eventId: 'skewb',
     displayName: 'Skewb',
-    scrambleSize: 'text-xl md:text-2xl',
+    scrambleClasses: 'text-xl md:text-2xl',
     generateScramble: true
   },
-  Clock: {
+  clock: {
     eventId: 'clock',
     displayName: 'Clock',
-    scrambleSize: 'text-md md:text-lg',
+    scrambleClasses: 'text-md md:text-lg',
     generateScramble: true
   },
-  Megaminx: {
+  minx: {
     eventId: 'minx',
     displayName: 'Megaminx',
-    scrambleSize: 'text-xs md:text-md',
+    scrambleClasses: 'text-xs md:text-md',
     generateScramble: true
   },
-  '6x6x6 (No scramble)': {
+  '666-ns': {
     eventId: '666',
     displayName: '6x6x6 (No scramble)',
-    scrambleSize: 'text-sm md:text-md',
+    scrambleClasses: 'text-sm md:text-md',
     generateScramble: false
   },
-  '7x7x7 (No scramble)': {
+  '777-ns': {
     eventId: '777',
     displayName: '7x7x7 (No scramble)',
-    scrambleSize: 'text-sm md:text-md',
+    scrambleClasses: 'text-sm md:text-md',
     generateScramble: false
   },
-  'Megaminx (No scramble)': {
+  'minx-ns': {
     eventId: 'minx',
     displayName: 'Megaminx (No scramble)',
-    scrambleSize: 'text-sm md:text-md',
+    scrambleClasses: 'text-sm md:text-md',
     generateScramble: false
   }
 }
 
-export type EventContext = {
-  eventId: string
-  displayName: string
-  scrambleSize: string
-  generateScramble: boolean
-}

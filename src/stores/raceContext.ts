@@ -93,20 +93,44 @@ export const useRaceContext = defineStore('raceContext', () => {
   const scramblesGenerating = ref(false)
 
   async function generateScrambleFor(player: Side) {
-    if(!session.value)
-      throw new Error('Session is not initialized')
+    const event = session.value!.selectedEvents[player]
+    const scramble = await randomScrambleForEvent(event.eventId)
+    currentRound.value.scramble[player] = scramble.toString()
+  }
 
-    const event = session.value.selectedEvents[player]
-    if(event.generateScramble) {
-      const scramble = await randomScrambleForEvent(event.eventId)
-      currentRound.value.scramble[player] = scramble.toString()
-    }
+  async function generateScrambleForBoth()
+  {
+    const event = session.value!.selectedEvents.player1
+    const scramble = await randomScrambleForEvent(event.eventId)
+    const scrambleString = scramble.toString()
+    currentRound.value.scramble.player1 = scrambleString
+    currentRound.value.scramble.player2 = scrambleString
   }
 
   async function generateScrambles() {
     scramblesGenerating.value = true
-    await generateScrambleFor('player1')
-    await generateScrambleFor('player2')
+    if(!session.value)
+      throw new Error('Session is not initialized')
+    const { selectedEvents } = session.value
+
+    if(!selectedEvents.player1.generateScramble && !selectedEvents.player2.generateScramble) {
+      return
+    }
+    else if(selectedEvents.player1.generateScramble && !selectedEvents.player2.generateScramble) {
+      await generateScrambleFor('player1')
+    }
+    else if(!selectedEvents.player1.generateScramble && selectedEvents.player2.generateScramble) {
+      await generateScrambleFor('player2')
+    }
+    else {
+      if(selectedEvents.player1.eventId === selectedEvents.player2.eventId) {
+        await generateScrambleForBoth()
+      }
+      else {
+        await generateScrambleFor('player1')
+        await generateScrambleFor('player2')
+      }
+    }
     scramblesGenerating.value = false
   }
 

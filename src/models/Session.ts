@@ -5,15 +5,18 @@ import type { SessionCreationOptions } from './SessionCreationOptions'
 import { createStatsContext as createEmptyStatsContext, type StatsContext } from './StatsContext'
 import { statsSchema } from '../lib/appStatsSchema'
 import { createStatsSchema } from './StatsSchema'
-import { del, get, keys, set } from 'idb-keyval'
+import { del, get, getMany, keys, set } from 'idb-keyval'
 import { eventsMap } from '../lib/eventsMap'
 
-export type Session = {
+export type SessionMeta = {
   id?: string
   name?: string
   playerNames: Record<Side, string | undefined>
   createdDate: Date
   selectedEvents: Record<Side, Event>
+}
+
+export type Session = SessionMeta & {
   completedRounds: Round[]
   stats: Record<Side, StatsContext>
 }
@@ -48,8 +51,16 @@ export function createSession(options: SessionCreationOptions = {}): Session {
   }
 }
 
+export async function getAllSessionMeta(): Promise<SessionMeta[]> {
+  const keysList = await keys()
+  const sessionMetaKeys = keysList.filter(key => key.toString().match(/session-meta-.*/))
+  const sessionMetas = await getMany<SessionMeta>(sessionMetaKeys)
+
+  return sessionMetas
+}
+
 export async function getSession(sessionId: string): Promise<Session> {
-  const session = await get<Session>(sessionId)
+  const session = await get<Session>(`session-${sessionId}`)
   if (!session) {
     throw new Error(`Session with ID ${sessionId} not found`)
   }
@@ -59,11 +70,16 @@ export async function getSession(sessionId: string): Promise<Session> {
 export async function saveSession(session: Session): Promise<void> {
   if (!session.id) {
     const idbKeys = await keys()
-    const keyCount = idbKeys.length
-    session.id = `session-${keyCount + 1}`
+    const keyCount = idbKeys.filter(k => k.toString().match(/session-meta-.*/)).length
+    session.id = (keyCount + 1).toString()
   }
 
-  await set(session.id, session)
+  const sessionMeta: SessionMeta = {
+    ...session,
+  }
+
+  await set(`session-meta-${session.id}`, sessionMeta)
+  await set(`session-${session.id}`, session)
 }
 
 export async function deleteSession(sessionId: string): Promise<void> {

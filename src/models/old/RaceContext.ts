@@ -18,13 +18,13 @@ export function convertSeparateToSession(event: Event, rounds: RoundContextV2[],
     rounds: rounds,
     stats: stats
   } as RaceContextV1)
-  session.id = 'session-v1-separated'
+  session.id = 'v1-separated'
   return session
 }
 
 export function convertToSession(v1Context: RaceContextV1): Session {
   return {
-    id: 'session-v1',
+    id: 'v1',
     playerNames: {
       player1: undefined,
       player2: undefined

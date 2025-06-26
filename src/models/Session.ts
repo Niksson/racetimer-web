@@ -14,6 +14,7 @@ export type SessionMeta = {
   playerNames: SideMap<string | undefined>
   createdDate: Date
   selectedEvents: SideMap<Event>
+  generateScrambles: boolean
 }
 
 export function getSessionMeta(session: Session): SessionMeta {
@@ -22,7 +23,8 @@ export function getSessionMeta(session: Session): SessionMeta {
     name: session.name,
     playerNames: session.playerNames,
     createdDate: session.createdDate,
-    selectedEvents: session.selectedEvents
+    selectedEvents: session.selectedEvents,
+    generateScrambles: session.generateScrambles
   }
 }
 
@@ -42,7 +44,8 @@ export function createSession(options: SessionCreationOptions = {}): Session {
     selectedEvents = {
       player1: '333',
       player2: '333'
-    }
+    },
+    generateScrambles = true
   } = options
 
   return {
@@ -57,7 +60,8 @@ export function createSession(options: SessionCreationOptions = {}): Session {
     stats: {
       player1: createStats(),
       player2: createStats()
-    }
+    },
+    generateScrambles
   }
 }
 

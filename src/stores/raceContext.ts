@@ -23,7 +23,6 @@ import { createRound, determineWinner, type Round } from '../models/Round'
 import type { SessionCreationOptions } from '../models/SessionCreationOptions'
 import { getFromLocalStorage } from '../lib/helpers'
 
-
 export const useRaceContext = defineStore('raceContext', () => {
   const session = ref<Session>()
   const currentSessionId = useStorage<string | undefined>('currentSessionId', undefined)
@@ -47,11 +46,7 @@ export const useRaceContext = defineStore('raceContext', () => {
       const v1Stats = getFromLocalStorage<SideMap<StatsContext>>('raceContext.stats')
       if (v1EventContext && v1Rounds && v1Stats) {
         {
-          const convertedSession = convertSeparateToSession(
-            v1EventContext,
-            v1Rounds,
-            v1Stats
-          )
+          const convertedSession = convertSeparateToSession(v1EventContext, v1Rounds, v1Stats)
           await saveSession(convertedSession)
         }
       }
@@ -68,10 +63,14 @@ export const useRaceContext = defineStore('raceContext', () => {
       const storedSession = await getSession(currentSessionId.value)
       session.value = storedSession
     }
-    watch(() => session.value!.completedRounds, async () => {
-      console.log('Session updated, saving...')
-      saveSession(toRaw(session.value!))
-    }, {deep: true})
+    watch(
+      () => session.value!.completedRounds,
+      async () => {
+        console.log('Session updated, saving...')
+        saveSession(toRaw(session.value!))
+      },
+      { deep: true }
+    )
     sessionLoading.value = false
   }
 
@@ -87,8 +86,7 @@ export const useRaceContext = defineStore('raceContext', () => {
     currentRound.value.scramble[player] = scramble.toString()
   }
 
-  async function generateScrambleForBoth()
-  {
+  async function generateScrambleForBoth() {
     const event = session.value!.selectedEvents.player1
     const scramble = await randomScrambleForEvent(event.eventId)
     const scrambleString = scramble.toString()
@@ -98,42 +96,28 @@ export const useRaceContext = defineStore('raceContext', () => {
 
   async function generateScrambles() {
     scramblesGenerating.value = true
-    if(!session.value)
-      throw new Error('Session is not initialized')
+    if (!session.value) throw new Error('Session is not initialized')
     const { selectedEvents } = session.value
 
-    if(!selectedEvents.player1.generateScramble && !selectedEvents.player2.generateScramble) {
+    if (!session.value.generateScrambles) {
       return
-    }
-    else if(selectedEvents.player1.generateScramble && !selectedEvents.player2.generateScramble) {
+    } else if (selectedEvents.player1.eventId === selectedEvents.player2.eventId) {
+      await generateScrambleForBoth()
+    } else {
       await generateScrambleFor('player1')
-    }
-    else if(!selectedEvents.player1.generateScramble && selectedEvents.player2.generateScramble) {
       await generateScrambleFor('player2')
-    }
-    else {
-      if(selectedEvents.player1.eventId === selectedEvents.player2.eventId) {
-        await generateScrambleForBoth()
-      }
-      else {
-        await generateScrambleFor('player1')
-        await generateScrambleFor('player2')
-      }
     }
     scramblesGenerating.value = false
   }
 
   watch(sessionLoading, (loading) => {
-    if(loading) return;
+    if (loading) return
 
     generateScrambles()
-
   })
 
-
   function recordSolve(player: Side, timeElapsedMs: number) {
-    if(!session.value)
-      throw new Error('Session is not initialized')
+    if (!session.value) throw new Error('Session is not initialized')
 
     const solve: Solve = {
       timeMs: timeElapsedMs,
@@ -142,30 +126,25 @@ export const useRaceContext = defineStore('raceContext', () => {
     const round = currentRound.value
     round.solves[player] = solve
     addSolveAndCompute(session.value.stats[player], solve)
-    if(round.solves.player1 && round.solves.player2) {
+    if (round.solves.player1 && round.solves.player2) {
       concludeRound()
       startNewRound()
     }
   }
 
   function concludeRound() {
-    if(!session.value)
-      throw new Error('Session is not initialized')
+    if (!session.value) throw new Error('Session is not initialized')
 
     // Tally the score
-    currentRound.value.winner = determineWinner(
-      currentRound.value
-    )
+    currentRound.value.winner = determineWinner(currentRound.value)
     previousRound.value = unref(currentRound)
 
     session.value.completedRounds.push(currentRound.value)
-
   }
 
   // Score
   const score = computed(() => {
-    if(!session.value)
-      throw new Error('Session is not initialized')
+    if (!session.value) throw new Error('Session is not initialized')
     const player1Score = session.value.completedRounds.filter((r) => r.winner === 'player1').length
     const player2Score = session.value.completedRounds.filter((r) => r.winner === 'player2').length
 
@@ -181,11 +160,9 @@ export const useRaceContext = defineStore('raceContext', () => {
 
   // Edit penalty of previous round
   function setPenalty(player: Side, penalty: Penalty | null) {
-    if(!session.value)
-      throw new Error('Session is not initialized')
+    if (!session.value) throw new Error('Session is not initialized')
 
-    if(!previousRound.value)
-      return;
+    if (!previousRound.value) return
 
     previousRound.value.solves[player]!.penalty = penalty
     determineWinner(previousRound.value)
@@ -198,10 +175,9 @@ export const useRaceContext = defineStore('raceContext', () => {
     session.value = storedSession
     sessionLoading.value = false
 
-    if(storedSession.completedRounds.length == 0) {
+    if (storedSession.completedRounds.length == 0) {
       previousRound.value = undefined
-    }
-    else {
+    } else {
       previousRound.value = storedSession.completedRounds.slice(-1)[0]
     }
     currentRound.value = createRound()

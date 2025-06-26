@@ -44,6 +44,7 @@ export function convertToSession(v1Context: RaceContextV1): Session {
         },
         winner: r.winner
       } as Round
-    })
+    }),
+    generateScrambles: v1Context.eventContext.generateScramble
   } as Session
 }

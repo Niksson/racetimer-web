@@ -24,7 +24,7 @@ function openScrambleModal() {
 
 const puzzlesModal = useTemplateRef('puzzles-modal')
 function onEventChoice(event: string) {
-  raceContext.startNewSession({selectedEvents: { player1: event, player2: event}})
+  raceContext.startNewSession({selectedEvents: { player1: event, player2: event }, generateScrambles: eventsMap[event].generateScramble })
   puzzlesModal?.value?.modal?.close()
 }
 

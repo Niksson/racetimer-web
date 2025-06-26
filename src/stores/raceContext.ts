@@ -1,8 +1,8 @@
 import { defineStore } from 'pinia'
 import { computed, ref, toRaw, unref, watch } from 'vue'
 import { randomScrambleForEvent } from 'cubing/scramble'
-import { compareSolves, type Solve } from '../models/Solve'
-import type { Side } from '../models/Side'
+import { type Solve } from '../models/Solve'
+import type { Side, SideMap } from '../models/Side'
 import type { Penalty } from '../models/Penalty'
 import {
   addSolveAndCompute,
@@ -19,21 +19,10 @@ import {
 import { get } from 'idb-keyval'
 import type { Event } from '../models/Event'
 import { type RoundContextV2 } from '../models/old/RoundContext'
-import { createRound, type Round } from '../models/Round'
+import { createRound, determineWinner, type Round } from '../models/Round'
 import type { SessionCreationOptions } from '../models/SessionCreationOptions'
 import { getFromLocalStorage } from '../lib/helpers'
 
-const determineWinner = (round: Round): Side | null => {
-  if(!round.solves.player1 || !round.solves.player2)
-    throw new Error('Both players must have solves to determine a winner')
-
-  const p1Solve = round.solves.player1
-  const p2Solve = round.solves.player2
-  const comparison = compareSolves(p1Solve, p2Solve)
-  if (comparison < 0) return 'player1'
-  else if (comparison > 0) return 'player2'
-  return null
-}
 
 export const useRaceContext = defineStore('raceContext', () => {
   const session = ref<Session>()
@@ -55,7 +44,7 @@ export const useRaceContext = defineStore('raceContext', () => {
     if (!isV1SeparatedSessionSaved) {
       const v1EventContext = getFromLocalStorage<Event>('raceContext.eventContext')
       const v1Rounds = getFromLocalStorage<RoundContextV2[]>('raceContext.rounds')
-      const v1Stats = getFromLocalStorage<Record<Side, StatsContext>>('raceContext.stats')
+      const v1Stats = getFromLocalStorage<SideMap<StatsContext>>('raceContext.stats')
       if (v1EventContext && v1Rounds && v1Stats) {
         {
           const convertedSession = convertSeparateToSession(

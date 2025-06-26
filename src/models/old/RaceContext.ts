@@ -1,7 +1,7 @@
 import type { Event } from '../Event'
 import type { Round } from '../Round'
 import type { Session } from '../Session'
-import type { Side } from '../Side'
+import type { SideMap } from '../Side'
 import type { StatsContext } from '../StatsContext'
 import type { RoundContextV1, RoundContextV2 } from './RoundContext'
 
@@ -9,10 +9,10 @@ import type { RoundContextV1, RoundContextV2 } from './RoundContext'
 export type RaceContextV1 = {
   eventContext: Event
   rounds: RoundContextV1[]
-  stats: Record<Side, StatsContext>
+  stats: SideMap<StatsContext>
 }
 
-export function convertSeparateToSession(event: Event, rounds: RoundContextV2[], stats: Record<Side, StatsContext>): Session {
+export function convertSeparateToSession(event: Event, rounds: RoundContextV2[], stats: SideMap<StatsContext>): Session {
   const session = convertToSession({
     eventContext: event,
     rounds: rounds,

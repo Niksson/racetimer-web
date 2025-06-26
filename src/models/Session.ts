@@ -1,6 +1,6 @@
 import type { Round } from './Round'
 import type { Event } from './Event'
-import type { Side } from './Side'
+import type { SideMap } from './Side'
 import type { SessionCreationOptions } from './SessionCreationOptions'
 import { createStatsContext as createEmptyStatsContext, type StatsContext } from './StatsContext'
 import { statsSchema } from '../lib/appStatsSchema'
@@ -11,14 +11,24 @@ import { eventsMap } from '../lib/eventsMap'
 export type SessionMeta = {
   id?: string
   name?: string
-  playerNames: Record<Side, string | undefined>
+  playerNames: SideMap<string | undefined>
   createdDate: Date
-  selectedEvents: Record<Side, Event>
+  selectedEvents: SideMap<Event>
+}
+
+export function getSessionMeta(session: Session): SessionMeta {
+  return {
+    id: session.id,
+    name: session.name,
+    playerNames: session.playerNames,
+    createdDate: session.createdDate,
+    selectedEvents: session.selectedEvents
+  }
 }
 
 export type Session = SessionMeta & {
   completedRounds: Round[]
-  stats: Record<Side, StatsContext>
+  stats: SideMap<StatsContext>
 }
 
 export function createSession(options: SessionCreationOptions = {}): Session {
@@ -74,9 +84,7 @@ export async function saveSession(session: Session): Promise<void> {
     session.id = (keyCount + 1).toString()
   }
 
-  const sessionMeta: SessionMeta = {
-    ...session,
-  }
+  const sessionMeta: SessionMeta = getSessionMeta(session)
 
   await set(`session-meta-${session.id}`, sessionMeta)
   await set(`session-${session.id}`, session)

@@ -1,17 +1,17 @@
-import type { Side } from "../Side"
+import type { Side, SideMap } from "../Side"
 import type { Solve } from "../Solve"
 
 export type RoundContextV1 = {
   id: number
   scramble: string
-  solves: Record<Side, Solve>
+  solves: SideMap<Solve>
   winner: Side | null
 }
 
 export type RoundContextV2 = {
   id: number
   scramble?: string
-  solves: Record<Side, Solve | undefined>
+  solves: SideMap<Solve | undefined>
   winner: Side | null
   roundStarted: boolean
 }

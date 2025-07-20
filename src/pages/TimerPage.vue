@@ -84,23 +84,26 @@ function onNewRaceConfirmed() {
         <FullScreenModal id="quickStartModal" ref="quick-start-modal">
           <div class="m-4 flex flex-wrap gap-3 place-items-center">
             <button @click="onQuickStartEventChosen(key)" class="btn btn-primary px-3 grow"
-              v-for="[key, value] in withScramble" :key="key"><span class="cubing-icon" :class="value.eventIcon" />{{ value.displayName }}</button>
+              v-for="[key, value] in withScramble" :key="key"><span class="cubing-icon" :class="value.eventIcon" />{{
+                value.displayName }}</button>
           </div>
           <div class="divider">Without random scramble</div>
           <div class="m-4 flex flex-wrap gap-3 place-items-center">
             <button @click="onQuickStartEventChosen(key)" class="btn btn-primary px-3 grow"
-              v-for="[key, value] in withoutScramble" :key="key"><span class="cubing-icon" :class="value.eventIcon" />{{ value.displayName }}</button>
+              v-for="[key, value] in withoutScramble" :key="key"><span class="cubing-icon" :class="value.eventIcon" />{{
+                value.displayName }}</button>
           </div>
         </FullScreenModal>
         <FullScreenModal id="newRaceModal" ref="new-race-modal">
           <h3>New Race</h3>
           <div class="mt-2">
             <div class="flex justify-around">
-              <EventSelector side="player1" v-model="sessionCreationOptions.selectedEvents.player1" class="py-8 sm:w-36 md:w-44 w-24"
-                :events="Object.values(eventsMap)" :generate-scramble="true" />
+              <EventSelector side="player1" v-model="sessionCreationOptions.selectedEvents.player1"
+                @event-changed="sessionCreationOptions.selectedEvents.player2 = sessionCreationOptions.selectedEvents.player1"
+                class="py-8 sm:w-36 md:w-44 w-24" />
               <div class="divider divider-horizontal text-sm">vs</div>
-              <EventSelector side="player2" v-model="sessionCreationOptions.selectedEvents.player2" class="py-8 sm:w-36 md:w-44 w-24"
-                :events="Object.values(eventsMap)" :generate-scramble="true" />
+              <EventSelector side="player2" v-model="sessionCreationOptions.selectedEvents.player2"
+                class="py-8 sm:w-36 md:w-44 w-24" />
             </div>
             <fieldset class="fieldset mt-2">
               <label class="lable">
@@ -108,11 +111,11 @@ function onNewRaceConfirmed() {
                 Generate scrambles
               </label>
               <label class="label">Player 1</label>
-              <input type="text" v-model="sessionCreationOptions.playerNames.player1"
-                class="input w-full" placeholder="Name (Optional)" />
+              <input type="text" v-model="sessionCreationOptions.playerNames.player1" class="input w-full"
+                placeholder="Name (Optional)" />
               <label class="label">Player 2</label>
-              <input type="text" v-model="sessionCreationOptions.playerNames.player2"
-                class="input w-full" placeholder="Name (Optional)" />
+              <input type="text" v-model="sessionCreationOptions.playerNames.player2" class="input w-full"
+                placeholder="Name (Optional)" />
             </fieldset>
             <div class="modal-action">
               <button class="btn" @click="onNewRaceConfirmed">Confirm</button>

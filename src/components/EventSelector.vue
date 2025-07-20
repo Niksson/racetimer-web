@@ -36,14 +36,15 @@ const {side} = defineProps<{
   side: Side
 }>();
 
+const emit = defineEmits(['eventChanged'])
+
 const selectorDropDown = ref<HTMLDetailsElement | null>(null);
 function onSelect(cubingEventId: string) {
   model.value = cubingEventId;
-  console.log(selectorDropDown.value)
   if(selectorDropDown.value) {
     selectorDropDown.value.open = false;
-
   }
+  emit('eventChanged')
 }
 
 // We have left the 'generateScramble' options for Quick Start

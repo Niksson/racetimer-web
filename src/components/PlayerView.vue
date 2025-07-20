@@ -37,7 +37,7 @@ function onScrambleClick() {
     </div>
     <div class="grow flex flex-col justify-between relative">
       <div class="scramble mx-3 text-center">
-        <span v-if="!raceContext.session!.selectedEvents[side].generateScramble" class="text-xl">Hand scramble</span>
+        <span v-if="!raceContext.session!.generateScrambles" class="text-xl">Hand scramble</span>
         <span v-else-if="raceContext.scramblesGenerating" class="text-xl">Generating...</span>
         <span v-else :class="[raceContext.session!.selectedEvents[side].scrambleClasses]"
           @touchend="onScrambleClick">{{

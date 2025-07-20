@@ -95,11 +95,11 @@ function onNewRaceConfirmed() {
         <FullScreenModal id="newRaceModal" ref="new-race-modal">
           <h3>New Race</h3>
           <div class="mt-2">
-            <div class="flex justify-between">
-              <EventSelector side="player1" v-model="sessionCreationOptions.selectedEvents.player1" class="py-8 w-40"
+            <div class="flex justify-around">
+              <EventSelector side="player1" v-model="sessionCreationOptions.selectedEvents.player1" class="py-8 sm:w-36 md:w-44 w-24"
                 :events="Object.values(eventsMap)" :generate-scramble="true" />
               <div class="divider divider-horizontal text-sm">vs</div>
-              <EventSelector side="player2" v-model="sessionCreationOptions.selectedEvents.player2" class="py-8 w-40"
+              <EventSelector side="player2" v-model="sessionCreationOptions.selectedEvents.player2" class="py-8 sm:w-36 md:w-44 w-24"
                 :events="Object.values(eventsMap)" :generate-scramble="true" />
             </div>
             <fieldset class="fieldset mt-2">

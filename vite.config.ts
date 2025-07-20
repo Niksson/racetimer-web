@@ -20,6 +20,7 @@ export default defineConfig({
         }
       }
     }),
+    VueDevTools(),
     VitePWA({
       registerType: 'prompt',
       injectRegister: false,

@@ -17,6 +17,8 @@ export type SessionMeta = {
   generateScrambles: boolean
 }
 
+export type SessionNameType = 'player-names' | 'puzzle-names'
+
 export function getSessionMeta(session: Session): SessionMeta {
   return {
     id: session.id,
@@ -89,6 +91,7 @@ export async function getSession(sessionId: string): Promise<Session> {
 }
 
 export async function saveSession(session: Session): Promise<void> {
+  console.log('Saving session:', session)
   if (!session.id) {
     const idbKeys = await keys()
     const keyCount = idbKeys.filter((k) => k.toString().match(/session-meta-.*/)).length
@@ -98,9 +101,21 @@ export async function saveSession(session: Session): Promise<void> {
   const sessionMeta: SessionMeta = getSessionMeta(session)
 
   await set(`session-meta-${session.id}`, sessionMeta)
+  console.log('Session meta saved:', sessionMeta)
   await set(`session-${session.id}`, session)
+  console.log('Session saved:', session)
 }
 
 export async function deleteSession(sessionId: string): Promise<void> {
   await del(sessionId)
+}
+
+export function getNameType(session: SessionMeta): SessionNameType {
+  if (session.playerNames.player1 || session.playerNames.player2)
+    return 'player-names' 
+  else return 'puzzle-names'
+}
+
+export function eventsAreSame(session: SessionMeta): boolean {
+  return session.selectedEvents.player1.eventId === session.selectedEvents.player2.eventId
 }

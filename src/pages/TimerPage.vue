@@ -68,7 +68,7 @@ function onNewRaceConfirmed() {
     <input id="menu-drawer" type="checkbox" class="drawer-toggle" v-model="menuOpened" />
     <div class="drawer-content">
       <div id="timer-page" class="grid grid-rows-[1fr_auto_1fr] h-svh w-full">
-        <div v-if="raceContext.sessionLoading" class="player2 flex items-center justify-center">Loading...</div>
+        <div v-if="raceContext.storeLoading" class="player2 flex items-center justify-center">Loading...</div>
         <PlayerView v-else side="player2" @scramble-clicked="openScrambleModal" class="player2" />
         <div class="divider-custom">
           <div class="divider-content absolute w-full -top-5 flex justify-between">
@@ -79,7 +79,7 @@ function onNewRaceConfirmed() {
               @click="penaltyModal?.modal?.showModal">PENALTY</button>
           </div>
         </div>
-        <div v-if="raceContext.sessionLoading" class="flex items-center justify-center">Loading...</div>
+        <div v-if="raceContext.storeLoading" class="flex items-center justify-center">Loading...</div>
         <PlayerView v-else side="player1" @scramble-clicked="openScrambleModal" />
         <FullScreenModal id="quickStartModal" ref="quick-start-modal">
           <div class="m-4 flex flex-wrap gap-3 place-items-center">
@@ -120,7 +120,7 @@ function onNewRaceConfirmed() {
             </div>
           </div>
         </FullScreenModal>
-        <TwoSideModal id="scrambleModal" v-if="!raceContext.sessionLoading" ref="scramble-modal">
+        <TwoSideModal id="scrambleModal" v-if="!raceContext.storeLoading" ref="scramble-modal">
           <template #player2>
             <div class="flex place-content-center">
               <div class="text-lg" v-if="raceContext.scramblesGenerating">Generating...</div>

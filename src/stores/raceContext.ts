@@ -10,7 +10,7 @@ import {
   type StatsContext
 } from '../models/StatsContext'
 import { useStorage } from '@vueuse/core'
-import { createSession, getSession, saveSession, type Session } from '../models/Session'
+import { createSession, getAllSessionMeta, getSession, saveSession, type Session, type SessionMeta } from '../models/Session'
 import {
   convertSeparateToSession,
   convertToSession,
@@ -26,7 +26,7 @@ import { getFromLocalStorage } from '../lib/helpers'
 export const useRaceContext = defineStore('raceContext', () => {
   const session = ref<Session>()
   const currentSessionId = useStorage<string | undefined>('currentSessionId', undefined)
-  const sessionLoading = ref(true)
+  const storeLoading = ref(true)
 
   async function migrateSessions() {
     // Migrate from v1
@@ -71,10 +71,7 @@ export const useRaceContext = defineStore('raceContext', () => {
       },
       { deep: true }
     )
-    sessionLoading.value = false
   }
-
-  ensureSession()
 
   const previousRound = ref<Round>()
   const currentRound = ref<Round>(createRound())
@@ -109,12 +106,6 @@ export const useRaceContext = defineStore('raceContext', () => {
     }
     scramblesGenerating.value = false
   }
-
-  watch(sessionLoading, (loading) => {
-    if (loading) return
-
-    generateScrambles()
-  })
 
   function recordSolve(player: Side, timeElapsedMs: number) {
     if (!session.value) throw new Error('Session is not initialized')
@@ -170,10 +161,10 @@ export const useRaceContext = defineStore('raceContext', () => {
   }
 
   async function selectSession(id: string) {
-    sessionLoading.value = true
+    storeLoading.value = true
     const storedSession = await getSession(id)
     session.value = storedSession
-    sessionLoading.value = false
+    storeLoading.value = false
 
     if (storedSession.completedRounds.length == 0) {
       previousRound.value = undefined
@@ -185,21 +176,41 @@ export const useRaceContext = defineStore('raceContext', () => {
   }
 
   async function startNewSession(options: SessionCreationOptions) {
-    sessionLoading.value = true
-    session.value = createSession(options)
-    await saveSession(toRaw(session.value))
-    sessionLoading.value = false
+    storeLoading.value = true
+    const newSession = createSession(toRaw(options))
+    await saveSession(newSession)
+    await loadSessionMeta()
+    session.value = newSession
+    storeLoading.value = false
 
     previousRound.value = undefined
     currentRound.value = createRound()
     generateScrambles()
   }
 
+  const sessionMetaList = ref<SessionMeta[]>([])
+
+  async function loadSessionMeta() {
+    const sessions = await getAllSessionMeta()
+    sessionMetaList.value = sessions
+  }
+
   const roundStarted = ref(false)
+
+  async function init() {
+    storeLoading.value = true
+    await ensureSession()
+    await loadSessionMeta()
+    storeLoading.value = false
+    generateScrambles()
+  } 
+
+  init()
 
   return {
     session,
-    sessionLoading,
+    storeLoading,
+    sessionMetaList,
     scramblesGenerating,
     score,
     previousRound,

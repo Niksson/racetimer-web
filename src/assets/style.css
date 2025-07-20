@@ -117,3 +117,7 @@
   opacity: 0;
   transform: scale(0.7);
 }
+
+.session-active {
+  @apply bg-base-300 rounded-lg;
+}

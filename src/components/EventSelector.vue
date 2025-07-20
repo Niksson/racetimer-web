@@ -12,7 +12,7 @@
     </summary>
     <ul class="dropdown-content menu bg-base-300 mt-1 w-60 max-h-40 flex-nowrap overflow-scroll">
       <li v-for="event in events" :key="event.eventId">
-        <button class="gap-3" @click="(e) => onSelect(e, event.eventId)">
+        <button class="gap-3" @click="onSelect(event.eventId)">
           <div><span class="cubing-icon" :class="event.eventIcon" /></div>
           <div class="text-md">{{ event.displayName }}</div>
           <Check v-if="model === event.eventId" class="w-4 h-4" />
@@ -37,7 +37,7 @@ const {side} = defineProps<{
 }>();
 
 const selectorDropDown = ref<HTMLDetailsElement | null>(null);
-function onSelect(event: any, cubingEventId: string) {
+function onSelect(cubingEventId: string) {
   model.value = cubingEventId;
   console.log(selectorDropDown.value)
   if(selectorDropDown.value) {

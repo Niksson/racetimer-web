@@ -8,7 +8,7 @@ const raceContext = useRaceContext();
 
 <template>
   <div id="solves-page" class="grid grid-rows-[1fr_auto_1fr] h-svh w-full">
-    <div v-if="raceContext.sessionLoading" class="player2 flex items-center justify-center">Loading...</div>
+    <div v-if="raceContext.storeLoading" class="player2 flex items-center justify-center">Loading...</div>
     <div v-else class="player2 flex flex-col overflow-hidden">
       <div class="p-1 text-center text-lg font-semibold border-b-1 border-neutral-600">SOLVES</div>
       <ol class="grow solves-list list-inside list-decimal overflow-scroll">
@@ -23,7 +23,7 @@ const raceContext = useRaceContext();
         </RouterLink>
       </div>
     </div>
-    <div v-if="raceContext.sessionLoading" class="flex items-center justify-center">Loading...</div>
+    <div v-if="raceContext.storeLoading" class="flex items-center justify-center">Loading...</div>
     <div v-else class="flex flex-col overflow-hidden">
       <div class="p-1 text-center text-lg font-semibold border-b-1 border-neutral-600">SOLVES</div>
       <ol class="grow solves-list list-inside list-decimal overflow-scroll">

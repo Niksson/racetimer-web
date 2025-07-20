@@ -8,7 +8,7 @@ import type { Penalty } from '../models/Penalty';
 import { eventsMap } from '../lib/eventsMap';
 import FullScreenModal from '../components/FullScreenModal.vue';
 import { useRaceContext } from '../stores/raceContext';
-import RaceTimerLogo from '../components/RaceTimerLogo.vue';
+import AppMenu from '../components/AppMenu.vue';
 
 const menuOpened = ref<boolean>(false)
 
@@ -61,7 +61,7 @@ function onNewRace() {
         </div>
         <div v-if="raceContext.sessionLoading" class="flex items-center justify-center">Loading...</div>
         <PlayerView v-else side="player1" @scramble-clicked="openScrambleModal" />
-        <FullScreenModal ref="puzzles-modal">
+        <FullScreenModal id="quickStartModal" ref="puzzles-modal">
           <div class="m-4 flex flex-wrap gap-3 place-items-center">
             <button @click="onEventChoice(key)" class="btn btn-primary px-3 grow" v-for="[key, value] in withScramble"
               :key="key">{{ value.displayName }}</button>
@@ -72,7 +72,7 @@ function onNewRace() {
               v-for="[key, value] in withoutScramble" :key="key">{{ value.displayName }}</button>
           </div>
         </FullScreenModal>
-        <TwoSideModal v-if="!raceContext.sessionLoading" ref="scramble-modal">
+        <TwoSideModal id="scrambleModal" v-if="!raceContext.sessionLoading" ref="scramble-modal">
           <template #player2>
             <div class="flex place-content-center">
               <div class="text-lg" v-if="raceContext.scramblesGenerating">Generating...</div>
@@ -88,7 +88,7 @@ function onNewRace() {
             </div>
           </template>
         </TwoSideModal>
-        <TwoSideModal ref="penalty-modal">
+        <TwoSideModal id="penaltyModal" ref="penalty-modal">
           <template #player2>
             <div class="flex flex-wrap justify-center gap-2">
               <button class="btn btn-success flex-1" @click="setPenalty('player2', null)">OK</button>
@@ -106,18 +106,6 @@ function onNewRace() {
         </TwoSideModal>
       </div>
     </div>
-    <div class="drawer-side z-30">
-      <label for="my-drawer" aria-label="close sidebar" class="drawer-overlay" @click="menuOpened = false"></label>
-      <div class="menu bg-base-200 text-base-content h-svh w-64 p-4">
-        <div class="mt-2 text-base-content flex justify-center items-center gap-2">
-          <RaceTimerLogo class="w-14 h-full fill-base-content stroke-base-content" />
-          <div class="font-bold text-xl">RaceTimer</div>
-        </div>
-        <div class="mt-6">
-          <button id="new-race" class="w-full text-md btn btn-neutral" @click="onNewRace">NEW
-            RACE</button>
-        </div>
-      </div>
-    </div>
+    <AppMenu :newRaceCallback="onNewRace" />
   </div>
 </template>

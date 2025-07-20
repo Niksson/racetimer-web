@@ -37,7 +37,7 @@ onMounted(() => {
       <Component :is="Component" class="unselectable" />
     </Transition>
   </RouterView>
-  <FullScreenModal ref='noTouchModal' class="text-center">
+  <FullScreenModal id="noTouchModal" ref='noTouchModal' class="text-center">
     <h2>⚠️ WARNING ⚠️ </h2>
     <h2>NO TOUCH SCREEN DETECTED</h2>
     <p>It seems that you run this page using a device that doesn't have touch support.

@@ -9,7 +9,7 @@ defineExpose({
 </script>
 
 <template>
-  <dialog id="modal" class="modal" ref="modal">
+  <dialog class="modal" ref="modal">
     <div class="modal-box">
       <slot></slot>
     </div>

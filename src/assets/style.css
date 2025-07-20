@@ -1,4 +1,5 @@
 @import 'tailwindcss';
+@import '@cubing/icons/css';
 @plugin "daisyui" {
   themes: light --default, dark --prefersdark;
 }

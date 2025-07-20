@@ -25,17 +25,15 @@ import { ref } from 'vue';
 
 const menuOpened = ref(false);
 
-const { newRaceCallback } = defineProps<{
-  newRaceCallback: () => void
-}>();
+const emit = defineEmits(['newRace', 'quickStart']);
 
 function onNewRace() {
   menuOpened.value = false;
-  newRaceCallback();
+  emit('newRace');
 }
 
 function onQuickStart() {
   menuOpened.value = false;
-  newRaceCallback();
+  emit('quickStart');
 }
 </script>

@@ -33,20 +33,27 @@ export type Session = SessionMeta & {
   stats: SideMap<StatsContext>
 }
 
-export function createSession(options: SessionCreationOptions = {}): Session {
+export const defaultSessionCreationOptions: SessionCreationOptions = {
+  name: undefined,
+  playerNames: { player1: undefined, player2: undefined },
+  selectedEvents: {
+    player1: '333',
+    player2: '333'
+  },
+  generateScrambles: true
+}
+
+export function createSession(options: SessionCreationOptions | undefined = undefined): Session {
   const createStats = (): StatsContext => {
     return createEmptyStatsContext(createStatsSchema({ averageTrimPercent: 5, items: statsSchema }))
   }
 
   const {
-    playerNames = { player1: undefined, player2: undefined },
+    playerNames,
     name,
-    selectedEvents = {
-      player1: '333',
-      player2: '333'
-    },
-    generateScrambles = true
-  } = options
+    selectedEvents,
+    generateScrambles
+  } = {...defaultSessionCreationOptions, ...options}
 
   return {
     name,
@@ -67,7 +74,7 @@ export function createSession(options: SessionCreationOptions = {}): Session {
 
 export async function getAllSessionMeta(): Promise<SessionMeta[]> {
   const keysList = await keys()
-  const sessionMetaKeys = keysList.filter(key => key.toString().match(/session-meta-.*/))
+  const sessionMetaKeys = keysList.filter((key) => key.toString().match(/session-meta-.*/))
   const sessionMetas = await getMany<SessionMeta>(sessionMetaKeys)
 
   return sessionMetas
@@ -84,7 +91,7 @@ export async function getSession(sessionId: string): Promise<Session> {
 export async function saveSession(session: Session): Promise<void> {
   if (!session.id) {
     const idbKeys = await keys()
-    const keyCount = idbKeys.filter(k => k.toString().match(/session-meta-.*/)).length
+    const keyCount = idbKeys.filter((k) => k.toString().match(/session-meta-.*/)).length
     session.id = (keyCount + 1).toString()
   }
 

@@ -8,6 +8,9 @@ importers:
 
   .:
     dependencies:
+      '@cubing/icons':
+        specifier: ^3.0.4
+        version: 3.0.4
       '@tailwindcss/vite':
         specifier: ^4.1.2
         version: 4.1.2(vite@6.2.5(@types/node@22.14.0)(jiti@2.4.2)(lightningcss@1.29.2)(terser@5.39.0))
@@ -674,6 +677,9 @@ packages:
   '@csstools/css-tokenizer@3.0.3':
     resolution: {integrity: sha512-UJnjoFsmxfKUdNYdWgOB0mWUypuLvAfQPH1+pyvRJs6euowbFkFC6P13w1l8mJyi3vxYMxc9kld5jZEGRQs6bw==}
     engines: {node: '>=18'}
+
+  '@cubing/icons@3.0.4':
+    resolution: {integrity: sha512-YgezYPOxxbtUbCXCTvGkFErb2gIqYC3XqYuaYMAMgveo1W5wvGpnxHgx5zxTOjqcUxn8eVyH3myzr857KHXLpw==}
 
   '@emnapi/runtime@1.4.0':
     resolution: {integrity: sha512-64WYIf4UYcdLnbKn/umDlNjQDSS8AgZrI/R9+x5ilkUVFxXcA1Ebl+gQLc/6mERA4407Xof0R7wEyEuj091CVw==}
@@ -3918,6 +3924,8 @@ snapshots:
       '@csstools/css-tokenizer': 3.0.3
 
   '@csstools/css-tokenizer@3.0.3': {}
+
+  '@cubing/icons@3.0.4': {}
 
   '@emnapi/runtime@1.4.0':
     dependencies:

@@ -107,7 +107,9 @@ export async function saveSession(session: Session): Promise<void> {
 }
 
 export async function deleteSession(sessionId: string): Promise<void> {
-  await del(sessionId)
+  console.log('Deleting session with ID:', sessionId)
+  await del(`session-meta-${sessionId}`)
+  await del(`session-${sessionId}`)
 }
 
 export function getNameType(session: SessionMeta): SessionNameType {

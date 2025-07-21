@@ -6,7 +6,7 @@ import TwoSideModal from '../components/TwoSideModal.vue';
 import type { Side } from '../models/Side';
 import type { Penalty } from '../models/Penalty';
 import { eventsMap } from '../lib/eventsMap';
-import FullScreenModal from '../components/FullScreenModal.vue';
+import DaisyModal from '../components/DaisyModal.vue';
 import { useRaceContext } from '../stores/raceContext';
 import AppMenu from '../components/AppMenu.vue';
 import type { SessionCreationOptions } from '../models/SessionCreationOptions';
@@ -14,22 +14,24 @@ import { defaultSessionCreationOptions } from '../models/Session';
 import EventSelector from '../components/EventSelector.vue';
 
 const menuOpened = ref<boolean>(false)
+const scrambleModalOpen = ref(false)
+const penaltyModalOpen = ref(false)
+
+const newRaceModalOpen = ref(false)
+const quickStartModalOpen = ref(false)
 
 const raceContext = useRaceContext()
 const withScramble = Object.entries(eventsMap).filter(([_, value]) => value.generateScramble)
 const withoutScramble = Object.entries(eventsMap).filter(([_, value]) => !value.generateScramble)
 
-const scrambleModal = useTemplateRef('scramble-modal')
 function openScrambleModal() {
   if (raceContext.roundStarted) return
-  scrambleModal?.value?.modal?.showModal()
+  scrambleModalOpen.value = true
 }
-
-const quickStartModal = useTemplateRef('quick-start-modal')
 
 function onQuickStart() {
   menuOpened.value = false
-  quickStartModal?.value?.modal?.showModal()
+  quickStartModalOpen.value = true
 }
 
 function onQuickStartEventChosen(event: string) {
@@ -38,27 +40,24 @@ function onQuickStartEventChosen(event: string) {
     selectedEvents: { player1: event, player2: event },
     generateScrambles: eventsMap[event].generateScramble
   })
-  quickStartModal?.value?.modal?.close()
+  quickStartModalOpen.value = false
 }
-
-const penaltyModal = useTemplateRef('penalty-modal')
 
 function setPenalty(player: Side, penalty: Penalty | null) {
   raceContext.setPenalty(player, penalty)
-  penaltyModal?.value?.modal?.close()
+  penaltyModalOpen.value = false
 }
 
-const newRaceModal = useTemplateRef('new-race-modal')
 const sessionCreationOptions = ref<SessionCreationOptions>(defaultSessionCreationOptions)
 
 function onNewRace() {
   menuOpened.value = false
-  newRaceModal?.value?.modal?.showModal()
+  newRaceModalOpen.value = true
 }
 
 function onNewRaceConfirmed() {
   raceContext.startNewSession(sessionCreationOptions.value)
-  newRaceModal?.value?.modal?.close()
+  newRaceModalOpen.value = false
 }
 
 </script>
@@ -76,12 +75,12 @@ function onNewRaceConfirmed() {
               :class="{ 'hidden': raceContext.roundStarted }">MENU</label>
             <button :disabled="raceContext.roundStarted" id="penalty"
               class="mr-6 w-24 text-xs btn btn-outline bg-base-100" :class="{ 'hidden': raceContext.roundStarted }"
-              @click="penaltyModal?.modal?.showModal">PENALTY</button>
+              @click="penaltyModalOpen = true">PENALTY</button>
           </div>
         </div>
         <div v-if="raceContext.storeLoading" class="flex items-center justify-center">Loading...</div>
         <PlayerView v-else side="player1" @scramble-clicked="openScrambleModal" />
-        <FullScreenModal id="quickStartModal" ref="quick-start-modal">
+        <DaisyModal backdrop id="quickStartModal" v-model="quickStartModalOpen">
           <div class="m-4 flex flex-wrap gap-3 place-items-center">
             <button @click="onQuickStartEventChosen(key)" class="btn btn-primary px-3 grow"
               v-for="[key, value] in withScramble" :key="key"><span class="cubing-icon" :class="value.eventIcon" />{{
@@ -93,8 +92,8 @@ function onNewRaceConfirmed() {
               v-for="[key, value] in withoutScramble" :key="key"><span class="cubing-icon" :class="value.eventIcon" />{{
                 value.displayName }}</button>
           </div>
-        </FullScreenModal>
-        <FullScreenModal id="newRaceModal" ref="new-race-modal">
+        </DaisyModal>
+        <DaisyModal id="newRaceModal" backdrop v-model="newRaceModalOpen">
           <h3>New Race</h3>
           <div class="mt-2">
             <div class="flex justify-around">
@@ -119,11 +118,11 @@ function onNewRaceConfirmed() {
             </fieldset>
             <div class="modal-action">
               <button class="btn" @click="onNewRaceConfirmed">Confirm</button>
-              <button class="btn" @click="newRaceModal?.modal?.close()">Cancel</button>
+              <button class="btn" @click="newRaceModalOpen = false">Cancel</button>
             </div>
           </div>
-        </FullScreenModal>
-        <TwoSideModal id="scrambleModal" v-if="!raceContext.storeLoading" ref="scramble-modal">
+        </DaisyModal>
+        <TwoSideModal v-model="scrambleModalOpen" backdrop id="scrambleModal" v-if="!raceContext.storeLoading">
           <template #player2>
             <div class="flex place-content-center">
               <div class="text-lg" v-if="raceContext.scramblesGenerating">Generating...</div>
@@ -139,7 +138,7 @@ function onNewRaceConfirmed() {
             </div>
           </template>
         </TwoSideModal>
-        <TwoSideModal id="penaltyModal" ref="penalty-modal">
+        <TwoSideModal v-model="penaltyModalOpen" backdrop id="penaltyModal">
           <template #player2>
             <div class="flex flex-wrap justify-center gap-2">
               <button class="btn btn-success flex-1" @click="setPenalty('player2', null)">OK</button>

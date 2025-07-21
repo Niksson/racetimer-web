@@ -10,7 +10,7 @@ import {
   type StatsContext
 } from '../models/StatsContext'
 import { useStorage } from '@vueuse/core'
-import { createSession, getAllSessionMeta, getSession, saveSession, type Session, type SessionMeta } from '../models/Session'
+import { createSession, deleteSession, getAllSessionMeta, getSession, saveSession, type Session, type SessionMeta } from '../models/Session'
 import {
   convertSeparateToSession,
   convertToSession,
@@ -188,6 +188,16 @@ export const useRaceContext = defineStore('raceContext', () => {
     generateScrambles()
   }
 
+  async function removeSession(sessionId: string) {
+    if (!sessionId) return
+    storeLoading.value = true
+    await deleteSession(sessionId)
+    await loadSessionMeta()
+    if(session.value?.id === sessionId)
+      selectSession(sessionMetaList.value[0].id!)
+    storeLoading.value = false
+  }
+
   const sessionMetaList = ref<SessionMeta[]>([])
 
   async function loadSessionMeta() {
@@ -220,6 +230,7 @@ export const useRaceContext = defineStore('raceContext', () => {
     startNewRound,
     setPenalty,
     selectSession,
+    removeSession,
     startNewSession,
     roundStarted
   }

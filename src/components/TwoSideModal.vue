@@ -1,23 +1,23 @@
 <script setup lang="ts">
-import { ref } from 'vue';
 
-const modal = ref<HTMLDialogElement>()
+const { backdrop } = defineProps<{
+  backdrop?: boolean
+}>();
 
-defineExpose({
-  modal
-})
+const model = defineModel<boolean>()
+
 </script>
 
 <template>
-  <dialog class="modal grid-rows-2" ref="modal">
-    <div class="modal-box player2" @click="modal?.close()">
+  <dialog class="modal grid-rows-2" :class="{ 'modal-open': model }">
+    <div class="modal-box player2" @click="model = false">
       <slot name="player2"></slot>
     </div>
-    <div class="modal-box row-start-2" @click="modal?.close()">
+    <div class="modal-box row-start-2" @click="model = false">
       <slot name="player1"></slot>
     </div>
-    <form method="dialog" class="modal-backdrop row-span-2 row-start-1">
-      <button>close</button>
+    <form v-if="backdrop" method="dialog" class="modal-backdrop row-span-2 row-start-1">
+      <button @click="model = false">close</button>
     </form>
   </dialog>
 </template>

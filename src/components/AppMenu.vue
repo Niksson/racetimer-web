@@ -18,47 +18,56 @@
         <span class="loading loading-spinner loading-xl" />
       </div>
       <ul v-else class="grow menu bg-base-200 w-60 m-2 rounded-lg overflow-scroll flex-nowrap">
-        <li v-for="session in sessions" :key="session.id" class="my-1 pb-2 flex flex-row gap-1 flex-nowrap items-center border-b-1 border-b-base-content/30" >
-          <button class="flex flex-col w-full items-start" :class="{'menu-active': activeSession?.id === session.id}" @click="selectSession(session.id!)">
-            <div id="row-1">
-              <div v-if="getNameType(session) === 'player-names'">
-                <div class="font-semibold">{{ session.playerNames.player1 ?? 'Guest' }}</div>
-                <div>vs</div>
-                <div class="font-semibold">{{ session.playerNames.player2 ?? 'Guest' }}</div>
+        <li v-for="(session, ix) in sessions" :key="session.id"
+          class="my-1 pb-2 flex flex-row gap-1 flex-nowrap items-center border-b-1 border-b-base-content/30">
+          <div class="w-full block" :class="{ 'menu-active': activeSession?.id === session.id }"
+            @click="selectSession(session.id!)">
+            <div class="grow flex flex-col w-full items-start">
+              <div id="row-1" class="flex justify-between items-center w-full">
+                <div v-if="getNameType(session) === 'player-names'">
+                  <div class="font-semibold">{{ session.playerNames.player1 ?? 'Guest' }}</div>
+                  <div>vs</div>
+                  <div class="font-semibold">{{ session.playerNames.player2 ?? 'Guest' }}</div>
+                </div>
+                <div v-else-if="eventsAreSame(session)">
+                  <div class="font-semibold">{{ session.selectedEvents.player1.displayName }}</div>
+                </div>
+                <div v-else>
+                  <div class="font-semibold">{{ session.selectedEvents.player1.displayName }}</div>
+                  <div>vs</div>
+                  <div class="font-semibold">{{ session.selectedEvents.player2.displayName }}</div>
+                </div>
+                <button @click.stop="" class="p-0 btn btn-ghost">
+                  <X class="w-4 h-4 text-error" />
+                </button>
               </div>
-              <div v-else-if="eventsAreSame(session)">
-                <div class="font-semibold">{{ session.selectedEvents.player1.displayName }}</div>
-              </div>
-              <div v-else>
-                <div class="font-semibold">{{ session.selectedEvents.player1.displayName }}</div>
-                <div>vs</div>
-                <div class="font-semibold">{{ session.selectedEvents.player2.displayName }}</div>
+              <div id="row-2" class="flex justify-between items-center w-full">
+                <template v-if="eventsAreSame(session)">
+                  <div class="col-span-1"><span class="cubing-icon"
+                      :class="session.selectedEvents.player1.eventIcon"></span></div>
+                </template>
+                <template v-else>
+                  <div class="text-xs"><span class="cubing-icon"
+                      :class="session.selectedEvents.player1.eventIcon"></span> vs <span class="cubing-icon"
+                      :class="session.selectedEvents.player2.eventIcon"></span></div>
+                </template>
+                <div class="text-xs self-end">{{ dayjs(session.createdDate).format('YYYY-MM-DD HH:mm') }}</div>
               </div>
             </div>
-            <div id="row-2" class="flex justify-between items-center w-full">
-              <template v-if="eventsAreSame(session)">
-                <div class="col-span-1"><span class="cubing-icon" :class="session.selectedEvents.player1.eventIcon"></span></div>
-              </template>
-              <template v-else>
-                <div class="text-xs"><span class="cubing-icon" :class="session.selectedEvents.player1.eventIcon"></span> vs <span class="cubing-icon" :class="session.selectedEvents.player2.eventIcon"></span></div>
-              </template>
-              <div class="text-xs self-end">{{ dayjs(session.createdDate).format('YYYY-MM-DD HH:mm') }}</div>
-            </div>
-          </button>
-          <button class="p-1 btn btn-ghost">
-            <EllipsisVertical class="w-4 h-4" />
-          </button>
+          </div>
         </li>
       </ul>
-      <button class="btn bg-base-300 w-full"><Info class="w-4 h-4"/>About</button>
+      <button class="btn bg-base-300 w-full">
+        <Info class="w-4 h-4" />About
+      </button>
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
-import { Plus, Zap, Info, EllipsisVertical } from 'lucide-vue-next';
+import { Plus, Zap, Info, X } from 'lucide-vue-next';
 import RaceTimerLogo from '../components/RaceTimerLogo.vue';
-import { ref } from 'vue';
+import { ref, useTemplateRef } from 'vue';
 import { useRaceContext } from '../stores/raceContext';
 import dayjs from 'dayjs';
 import { eventsAreSame, getNameType } from '../models/Session';
@@ -69,6 +78,7 @@ const menuOpened = ref(false);
 const { storeLoading, sessionMetaList: sessions, session: activeSession } = storeToRefs(useRaceContext());
 
 const emit = defineEmits(['newRace', 'quickStart']);
+
 
 function onNewRace() {
   menuOpened.value = false;
@@ -83,6 +93,10 @@ function onQuickStart() {
 function selectSession(sessionId: string) {
   menuOpened.value = false;
   useRaceContext().selectSession(sessionId);
+}
+
+function onDeleteSession(sessionId: string) {
+
 }
 
 </script>

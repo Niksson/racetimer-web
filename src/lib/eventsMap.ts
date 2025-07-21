@@ -80,21 +80,21 @@ export const eventsMap: Record<string, Event> = {
   },
   '666-ns': {
     eventId: '666',
-    displayName: '6x6x6 (No scramble)',
+    displayName: '6x6x6',
     scrambleClasses: 'text-sm md:text-md',
     eventIcon: 'event-666',
     generateScramble: false
   },
   '777-ns': {
     eventId: '777',
-    displayName: '7x7x7 (No scramble)',
+    displayName: '7x7x7',
     scrambleClasses: 'text-sm md:text-md',
     eventIcon: 'event-777',
     generateScramble: false
   },
   'minx-ns': {
     eventId: 'minx',
-    displayName: 'Megaminx (No scramble)',
+    displayName: 'Megaminx',
     scrambleClasses: 'text-sm md:text-md',
     eventIcon: 'event-minx',
     generateScramble: false

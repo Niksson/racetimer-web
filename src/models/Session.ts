@@ -7,6 +7,7 @@ import { statsSchema } from '../lib/appStatsSchema'
 import { createStatsSchema } from './StatsSchema'
 import { del, get, getMany, keys, set } from 'idb-keyval'
 import { eventsMap } from '../lib/eventsMap'
+import { v7 as uuidv7 } from 'uuid'
 
 export type SessionMeta = {
   id?: string
@@ -93,9 +94,7 @@ export async function getSession(sessionId: string): Promise<Session> {
 export async function saveSession(session: Session): Promise<void> {
   console.log('Saving session:', session)
   if (!session.id) {
-    const idbKeys = await keys()
-    const keyCount = idbKeys.filter((k) => k.toString().match(/session-meta-.*/)).length
-    session.id = (keyCount + 1).toString()
+    session.id = uuidv7()
   }
 
   const sessionMeta: SessionMeta = getSessionMeta(session)

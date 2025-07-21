@@ -1,64 +1,33 @@
 <script setup lang="ts">
-import { ref, useTemplateRef } from 'vue';
+import { ref } from 'vue';
 import 'scramble-display';
 import PlayerView from '../components/PlayerView.vue';
 import TwoSideModal from '../components/TwoSideModal.vue';
 import type { Side } from '../models/Side';
 import type { Penalty } from '../models/Penalty';
-import { eventsMap } from '../lib/eventsMap';
-import DaisyModal from '../components/DaisyModal.vue';
 import { useRaceContext } from '../stores/raceContext';
 import AppMenu from '../components/AppMenu.vue';
-import type { SessionCreationOptions } from '../models/SessionCreationOptions';
-import { defaultSessionCreationOptions } from '../models/Session';
-import EventSelector from '../components/EventSelector.vue';
 
 const menuOpened = ref<boolean>(false)
 const scrambleModalOpen = ref(false)
 const penaltyModalOpen = ref(false)
 
-const newRaceModalOpen = ref(false)
-const quickStartModalOpen = ref(false)
 
 const raceContext = useRaceContext()
-const withScramble = Object.entries(eventsMap).filter(([_, value]) => value.generateScramble)
-const withoutScramble = Object.entries(eventsMap).filter(([_, value]) => !value.generateScramble)
 
 function openScrambleModal() {
   if (raceContext.roundStarted) return
   scrambleModalOpen.value = true
 }
 
-function onQuickStart() {
-  menuOpened.value = false
-  quickStartModalOpen.value = true
-}
 
-function onQuickStartEventChosen(event: string) {
-  raceContext.startNewSession({
-    ...defaultSessionCreationOptions,
-    selectedEvents: { player1: event, player2: event },
-    generateScrambles: eventsMap[event].generateScramble
-  })
-  quickStartModalOpen.value = false
-}
 
 function setPenalty(player: Side, penalty: Penalty | null) {
   raceContext.setPenalty(player, penalty)
   penaltyModalOpen.value = false
 }
 
-const sessionCreationOptions = ref<SessionCreationOptions>(defaultSessionCreationOptions)
 
-function onNewRace() {
-  menuOpened.value = false
-  newRaceModalOpen.value = true
-}
-
-function onNewRaceConfirmed() {
-  raceContext.startNewSession(sessionCreationOptions.value)
-  newRaceModalOpen.value = false
-}
 
 </script>
 
@@ -80,48 +49,6 @@ function onNewRaceConfirmed() {
         </div>
         <div v-if="raceContext.storeLoading" class="flex items-center justify-center">Loading...</div>
         <PlayerView v-else side="player1" @scramble-clicked="openScrambleModal" />
-        <DaisyModal backdrop id="quickStartModal" v-model="quickStartModalOpen">
-          <div class="m-4 flex flex-wrap gap-3 place-items-center">
-            <button @click="onQuickStartEventChosen(key)" class="btn btn-primary px-3 grow"
-              v-for="[key, value] in withScramble" :key="key"><span class="cubing-icon" :class="value.eventIcon" />{{
-                value.displayName }}</button>
-          </div>
-          <div class="divider">Without random scramble</div>
-          <div class="m-4 flex flex-wrap gap-3 place-items-center">
-            <button @click="onQuickStartEventChosen(key)" class="btn btn-primary px-3 grow"
-              v-for="[key, value] in withoutScramble" :key="key"><span class="cubing-icon" :class="value.eventIcon" />{{
-                value.displayName }}</button>
-          </div>
-        </DaisyModal>
-        <DaisyModal id="newRaceModal" backdrop v-model="newRaceModalOpen">
-          <h3>New Race</h3>
-          <div class="mt-2">
-            <div class="flex justify-around">
-              <EventSelector side="player1" v-model="sessionCreationOptions.selectedEvents.player1"
-                @event-changed="sessionCreationOptions.selectedEvents.player2 = sessionCreationOptions.selectedEvents.player1"
-                class="py-8 sm:w-36 md:w-44 w-24" />
-              <div class="divider divider-horizontal text-sm">vs</div>
-              <EventSelector side="player2" v-model="sessionCreationOptions.selectedEvents.player2"
-                class="py-8 sm:w-36 md:w-44 w-24" />
-            </div>
-            <fieldset class="fieldset mt-2">
-              <label class="lable">
-                <input type="checkbox" v-model="sessionCreationOptions.generateScrambles" class="checkbox mr-1" />
-                Generate scrambles
-              </label>
-              <label class="label">Player 1</label>
-              <input type="text" v-model="sessionCreationOptions.playerNames.player1" class="input w-full"
-                placeholder="Name (Optional)" />
-              <label class="label">Player 2</label>
-              <input type="text" v-model="sessionCreationOptions.playerNames.player2" class="input w-full"
-                placeholder="Name (Optional)" />
-            </fieldset>
-            <div class="modal-action">
-              <button class="btn" @click="onNewRaceConfirmed">Confirm</button>
-              <button class="btn" @click="newRaceModalOpen = false">Cancel</button>
-            </div>
-          </div>
-        </DaisyModal>
         <TwoSideModal v-model="scrambleModalOpen" backdrop id="scrambleModal" v-if="!raceContext.storeLoading">
           <template #player2>
             <div class="flex place-content-center">
@@ -156,6 +83,6 @@ function onNewRaceConfirmed() {
         </TwoSideModal>
       </div>
     </div>
-    <AppMenu @new-race="onNewRace" @quick-start="onQuickStart" />
+    <AppMenu />
   </div>
 </template>

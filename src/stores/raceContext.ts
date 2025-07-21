@@ -29,17 +29,17 @@ export const useRaceContext = defineStore('raceContext', () => {
   const storeLoading = ref(true)
 
   async function migrateSessions() {
-    // Migrate from v1
-    const isV1SessionSaved = await get('session-v1')
+    // Migrate from v0.1
+    const isV1SessionSaved = await get('session-v01')
     if (!isV1SessionSaved) {
-      const v1Context = getFromLocalStorage<RaceContextV1>('raceContext.v1')
+      const v1Context = getFromLocalStorage<RaceContextV1>('raceContext')
       if (v1Context) {
         const convertedSession = convertToSession(v1Context)
         await saveSession(convertedSession)
       }
     }
-    // Migrate from separated v1
-    const isV1SeparatedSessionSaved = await get('session-v1-separated')
+    // Migrate from v0.2
+    const isV1SeparatedSessionSaved = await get('session-v02')
     if (!isV1SeparatedSessionSaved) {
       const v1EventContext = getFromLocalStorage<Event>('raceContext.eventContext')
       const v1Rounds = getFromLocalStorage<RoundContextV2[]>('raceContext.rounds')
@@ -164,6 +164,7 @@ export const useRaceContext = defineStore('raceContext', () => {
     storeLoading.value = true
     const storedSession = await getSession(id)
     session.value = storedSession
+    currentSessionId.value = id
     storeLoading.value = false
 
     if (storedSession.completedRounds.length == 0) {

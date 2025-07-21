@@ -1,14 +1,14 @@
 import type { Side, SideMap } from "../Side"
 import type { Solve } from "../Solve"
 
-export type RoundContextV1 = {
+export type RoundContextV01 = {
   id: number
   scramble: string
   solves: SideMap<Solve>
   winner: Side | null
 }
 
-export type RoundContextV2 = {
+export type RoundContextV02 = {
   id: number
   scramble?: string
   solves: SideMap<Solve | undefined>
@@ -16,10 +16,10 @@ export type RoundContextV2 = {
   roundStarted: boolean
 }
 
-export const createRoundContextV1 = (
+export const createRoundContextV01 = (
   id: number,
   scramlbe: string | undefined = undefined
-): RoundContextV2 => ({
+): RoundContextV02 => ({
   id: id,
   scramble: scramlbe,
   solves: {

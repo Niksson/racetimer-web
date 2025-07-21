@@ -1,38 +1,46 @@
+import { eventsMap } from '../../lib/eventsMap'
 import type { Event } from '../Event'
 import type { Round } from '../Round'
 import type { Session } from '../Session'
 import type { SideMap } from '../Side'
 import type { StatsContext } from '../StatsContext'
-import type { RoundContextV1, RoundContextV2 } from './RoundContext'
+import type { RoundContextV01, RoundContextV02 } from './RoundContext'
 
 
-export type RaceContextV1 = {
-  eventContext: Event
-  rounds: RoundContextV1[]
+export type RaceContextV01 = {
+  eventContext: EventV01
+  rounds: RoundContextV01[]
   stats: SideMap<StatsContext>
 }
 
-export function convertSeparateToSession(event: Event, rounds: RoundContextV2[], stats: SideMap<StatsContext>): Session {
-  const session = convertToSession({
+export type EventV01 = {
+  eventId: string
+  displayName: string
+  scrambleClasses: string
+  generateScramble: boolean
+}
+
+export function convertV02ToV03(event: Event, rounds: RoundContextV02[], stats: SideMap<StatsContext>): Session {
+  const session = convertV01ToV03({
     eventContext: event,
     rounds: rounds,
     stats: stats
-  } as RaceContextV1)
-  session.id = 'v1-separated'
+  } as RaceContextV01)
+  session.id = 'v0.2'
   return session
 }
 
-export function convertToSession(v1Context: RaceContextV1): Session {
+export function convertV01ToV03(v1Context: RaceContextV01): Session {
   return {
-    id: 'v1',
+    id: 'v0.1',
     playerNames: {
       player1: undefined,
       player2: undefined
     },
     createdDate: new Date(),
     selectedEvents: {
-      player1: v1Context.eventContext,
-      player2: v1Context.eventContext
+      player1: eventsMap[v1Context.eventContext.eventId],
+      player2: eventsMap[v1Context.eventContext.eventId]
     },
     stats: v1Context.stats,
     completedRounds: v1Context.rounds.map((r) => {

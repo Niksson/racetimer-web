@@ -12,13 +12,13 @@ import {
 import { useStorage } from '@vueuse/core'
 import { createSession, deleteSession, getAllSessionMeta, getSession, saveSession, type Session, type SessionMeta } from '../models/Session'
 import {
-  convertSeparateToSession,
-  convertToSession,
-  type RaceContextV1
+  convertV02ToV03,
+  convertV01ToV03,
+  type RaceContextV01
 } from '../models/old/RaceContext'
 import { get } from 'idb-keyval'
 import type { Event } from '../models/Event'
-import { type RoundContextV2 } from '../models/old/RoundContext'
+import { type RoundContextV02 } from '../models/old/RoundContext'
 import { createRound, determineWinner, type Round } from '../models/Round'
 import type { SessionCreationOptions } from '../models/SessionCreationOptions'
 import { getFromLocalStorage } from '../lib/helpers'
@@ -30,23 +30,23 @@ export const useRaceContext = defineStore('raceContext', () => {
 
   async function migrateSessions() {
     // Migrate from v0.1
-    const isV1SessionSaved = await get('session-v01')
+    const isV1SessionSaved = await get('session-v0.1')
     if (!isV1SessionSaved) {
-      const v1Context = getFromLocalStorage<RaceContextV1>('raceContext')
+      const v1Context = getFromLocalStorage<RaceContextV01>('raceContext')
       if (v1Context) {
-        const convertedSession = convertToSession(v1Context)
+        const convertedSession = convertV01ToV03(v1Context)
         await saveSession(convertedSession)
       }
     }
     // Migrate from v0.2
-    const isV1SeparatedSessionSaved = await get('session-v02')
+    const isV1SeparatedSessionSaved = await get('session-v0.2')
     if (!isV1SeparatedSessionSaved) {
       const v1EventContext = getFromLocalStorage<Event>('raceContext.eventContext')
-      const v1Rounds = getFromLocalStorage<RoundContextV2[]>('raceContext.rounds')
+      const v1Rounds = getFromLocalStorage<RoundContextV02[]>('raceContext.rounds')
       const v1Stats = getFromLocalStorage<SideMap<StatsContext>>('raceContext.stats')
       if (v1EventContext && v1Rounds && v1Stats) {
         {
-          const convertedSession = convertSeparateToSession(v1EventContext, v1Rounds, v1Stats)
+          const convertedSession = convertV02ToV03(v1EventContext, v1Rounds, v1Stats)
           await saveSession(convertedSession)
         }
       }

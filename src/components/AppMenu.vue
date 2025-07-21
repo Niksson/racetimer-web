@@ -56,18 +56,18 @@
           </div>
         </li>
       </ul>
-      <button class="btn bg-base-300 w-full">
+      <button class="btn bg-base-300 w-full" @click="aboutModalOpen = true">
         <Info class="w-4 h-4" />About
       </button>
     </div>
-    <DaisyModal v-model="deleteDialog.isRevealed.value">
+    <ModalDialog v-model="deleteDialog.isRevealed.value">
       <h3>Are you sure?</h3>
       <div class="modal-action">
         <button @click="deleteDialog.confirm" class="btn btn-error btn-sm">Yes, delete</button>
         <button @click="deleteDialog.cancel" class="btn btn-neutral btn-sm">Cancel</button>
       </div>
-    </DaisyModal>
-    <DaisyModal backdrop id="quickStartModal" v-model="quickStartModalOpen">
+    </ModalDialog>
+    <ModalDialog backdrop id="quickStartModal" v-model="quickStartModalOpen">
       <div class="m-4 flex flex-wrap gap-3 place-items-center">
         <button @click="onQuickStartEventChosen(key)" class="btn btn-primary px-3 grow"
           v-for="[key, value] in withScramble" :key="key"><span class="cubing-icon" :class="value.eventIcon" />{{
@@ -79,8 +79,8 @@
           v-for="[key, value] in withoutScramble" :key="key"><span class="cubing-icon" :class="value.eventIcon" />{{
             value.displayName }} (No Scramble)</button>
       </div>
-    </DaisyModal>
-    <DaisyModal id="newRaceModal" backdrop v-model="newRaceModalOpen">
+    </ModalDialog>
+    <ModalDialog id="newRaceModal" backdrop v-model="newRaceModalOpen">
       <h3>New Race</h3>
       <div class="mt-2">
         <div class="flex justify-around">
@@ -108,26 +108,38 @@
           <button class="btn" @click="newRaceModalOpen = false">Cancel</button>
         </div>
       </div>
-    </DaisyModal>
+    </ModalDialog>
+    <ModalDialog class="text-center" id="aboutModal" backdrop v-model="aboutModalOpen">
+      <div class="text-base-content flex justify-center items-center gap-2">
+        <RaceTimerLogo class="w-14 h-full fill-base-content stroke-base-content" />
+        <div class="font-bold text-xl">RaceTimer</div>
+      </div>
+      <h2 class="text-lg">v0.3.0</h2>
+        <p class="mt-3">Inspired by <a href="https://github.com/maximxD/RaceTimer" class="link">RaceTimer by Maxim Ilin</a></p>
+        <p class="mt-3"><a href="https://github.com/Niksson/racetimer-web" class="link flex gap-1 justify-center items-center"><Github class="w-3 h-3 fill-base-content stroke-base-content"/>GitHub</a></p>
+    </ModalDialog>
   </div>
 </template>
 
 <script setup lang="ts">
 import { Plus, Zap, Info, X } from 'lucide-vue-next';
-import RaceTimerLogo from '../components/RaceTimerLogo.vue';
+import Github from './Icons/Github.vue';
+import RaceTimerLogo from './Icons/RaceTimerLogo.vue';
 import { ref } from 'vue';
 import { useRaceContext } from '../stores/raceContext';
 import dayjs from 'dayjs';
 import { defaultSessionCreationOptions, eventsAreSame, getNameType } from '../models/Session';
 import { storeToRefs } from 'pinia';
 import { useConfirmDialog } from '@vueuse/core';
-import DaisyModal from './DaisyModal.vue';
 import { eventsMap } from '../lib/eventsMap';
 import type { SessionCreationOptions } from '../models/SessionCreationOptions';
 import EventSelector from '../components/EventSelector.vue';
+import ModalDialog from './ModalDialog.vue';
 
 const { storeLoading, sessionMetaList: sessions, session: activeSession } = storeToRefs(useRaceContext());
 const { selectSession, removeSession, startNewSession } = useRaceContext();
+
+const aboutModalOpen = ref(false);
 
 const menuOpened = ref(false);
 

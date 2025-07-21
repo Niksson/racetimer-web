@@ -2,16 +2,15 @@
 import { ref } from 'vue';
 import 'scramble-display';
 import PlayerView from '../components/PlayerView.vue';
-import TwoSideModal from '../components/TwoSideModal.vue';
 import type { Side } from '../models/Side';
 import type { Penalty } from '../models/Penalty';
 import { useRaceContext } from '../stores/raceContext';
 import AppMenu from '../components/AppMenu.vue';
+import TwoSidedModalDialog from '../components/TwoSidedModalDialog.vue';
 
 const menuOpened = ref<boolean>(false)
 const scrambleModalOpen = ref(false)
 const penaltyModalOpen = ref(false)
-
 
 const raceContext = useRaceContext()
 
@@ -20,14 +19,10 @@ function openScrambleModal() {
   scrambleModalOpen.value = true
 }
 
-
-
 function setPenalty(player: Side, penalty: Penalty | null) {
   raceContext.setPenalty(player, penalty)
   penaltyModalOpen.value = false
 }
-
-
 
 </script>
 
@@ -49,7 +44,7 @@ function setPenalty(player: Side, penalty: Penalty | null) {
         </div>
         <div v-if="raceContext.storeLoading" class="flex items-center justify-center">Loading...</div>
         <PlayerView v-else side="player1" @scramble-clicked="openScrambleModal" />
-        <TwoSideModal v-model="scrambleModalOpen" backdrop id="scrambleModal" v-if="!raceContext.storeLoading">
+        <TwoSidedModalDialog v-model="scrambleModalOpen" backdrop id="scrambleModal" v-if="!raceContext.storeLoading">
           <template #player2>
             <div class="flex place-content-center">
               <div class="text-lg" v-if="raceContext.scramblesGenerating">Generating...</div>
@@ -64,8 +59,8 @@ function setPenalty(player: Side, penalty: Penalty | null) {
                 :scramble="raceContext.currentRound.scramble.player1" />
             </div>
           </template>
-        </TwoSideModal>
-        <TwoSideModal v-model="penaltyModalOpen" backdrop id="penaltyModal">
+        </TwoSidedModalDialog>
+        <TwoSidedModalDialog v-model="penaltyModalOpen" backdrop id="penaltyModal">
           <template #player2>
             <div class="flex flex-wrap justify-center gap-2">
               <button class="btn btn-success flex-1" @click="setPenalty('player2', null)">OK</button>
@@ -80,7 +75,7 @@ function setPenalty(player: Side, penalty: Penalty | null) {
               <button class="btn btn-error flex-1" @click="setPenalty('player1', 'DNF')">DNF</button>
             </div>
           </template>
-        </TwoSideModal>
+        </TwoSidedModalDialog>
       </div>
     </div>
     <AppMenu />

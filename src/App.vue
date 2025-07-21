@@ -2,7 +2,7 @@
 import { computed, onMounted, ref } from 'vue';
 import PWABadge from './components/PWABadge.vue'
 import { useStorage } from '@vueuse/core';
-import DaisyModal from './components/DaisyModal.vue';
+import ModalDialog from './components/ModalDialog.vue';
 
 const noTouchModalOpen = ref(false)
 
@@ -37,13 +37,13 @@ onMounted(() => {
       <Component :is="Component" class="unselectable" />
     </Transition>
   </RouterView>
-  <DaisyModal v-model="noTouchModalOpen" id="noTouchModal" class="text-center">
+  <ModalDialog v-model="noTouchModalOpen" id="noTouchModal" class="text-center">
     <h2>⚠️ WARNING ⚠️ </h2>
     <h2>NO TOUCH SCREEN DETECTED</h2>
     <p>It seems that you run this page using a device that doesn't have touch support.
     </p>
     <p>This timer cannot be properly used without touch screen support</p>
-  </DaisyModal>
+  </ModalDialog>
   <div v-if="showPwaPrompt && isIos" class="toast toast-middle toast-center m-0" aria-labelledby="toast-message"
     role="alert">
     <div class="alert alert-info">

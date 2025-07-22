@@ -156,7 +156,7 @@ export const useRaceContext = defineStore('raceContext', () => {
     if (!previousRound.value) return
 
     previousRound.value.solves[player]!.penalty = penalty
-    determineWinner(previousRound.value)
+    previousRound.value.winner = determineWinner(previousRound.value)
     replaceLastSolveAndCompute(session.value.stats[player], previousRound.value.solves[player]!)
   }
 

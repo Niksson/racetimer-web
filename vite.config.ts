@@ -20,7 +20,6 @@ export default defineConfig({
         }
       }
     }),
-    VueDevTools(),
     VitePWA({
       registerType: 'prompt',
       injectRegister: false,
@@ -51,7 +50,7 @@ export default defineConfig({
         type: 'module'
       }
     }),
-    tailwindcss()
+    tailwindcss(),
   ],
   worker: {
     format: 'es'

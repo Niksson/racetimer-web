@@ -1,10 +1,10 @@
 <script setup lang="ts">
-import { computed, onMounted, useTemplateRef, ref } from 'vue';
-import FullScreenModal from './components/FullScreenModal.vue';
+import { computed, onMounted, ref } from 'vue';
 import PWABadge from './components/PWABadge.vue'
 import { useStorage } from '@vueuse/core';
+import ModalDialog from './components/ModalDialog.vue';
 
-const noTouchModal = useTemplateRef('noTouchModal')
+const noTouchModalOpen = ref(false)
 
 const isIos = computed(() => {
   return /iPad|iPhone|iPod/.test(navigator.userAgent)
@@ -17,11 +17,12 @@ function closePwaPrompt() {
   showPwaPrompt.value = false
 }
 
+
 onMounted(() => {
   if (!('ontouchstart' in window) &&
     !(navigator.maxTouchPoints > 0)) {
 
-    noTouchModal.value?.modal?.showModal()
+    noTouchModalOpen.value = true
   }
   if (doNotShowPwaPromptAgain.value) {
     showPwaPrompt.value = false
@@ -33,16 +34,16 @@ onMounted(() => {
 <template>
   <RouterView v-slot="{ Component, route }">
     <Transition :name="route.meta.transition as string">
-      <Component :is="Component" class="unselectable grid grid-rows-[1fr_auto_1fr] h-svh w-full" />
+      <Component :is="Component" class="unselectable" />
     </Transition>
   </RouterView>
-  <FullScreenModal ref='noTouchModal' class="text-center">
+  <ModalDialog v-model="noTouchModalOpen" id="noTouchModal" class="text-center">
     <h2>⚠️ WARNING ⚠️ </h2>
     <h2>NO TOUCH SCREEN DETECTED</h2>
     <p>It seems that you run this page using a device that doesn't have touch support.
     </p>
     <p>This timer cannot be properly used without touch screen support</p>
-  </FullScreenModal>
+  </ModalDialog>
   <div v-if="showPwaPrompt && isIos" class="toast toast-middle toast-center m-0" aria-labelledby="toast-message"
     role="alert">
     <div class="alert alert-info">

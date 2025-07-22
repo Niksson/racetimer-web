@@ -4,7 +4,6 @@ import StatsCollapse from './StatsCollapse.vue';
 import VirtualTimer from './VirtualTimer.vue';
 import { useRaceContext } from '../stores/raceContext';
 import type { Side } from '../models/Side';
-import { last } from '../lib/helpers';
 const collapse = useTemplateRef('collapse')
 
 defineProps<{
@@ -13,8 +12,9 @@ defineProps<{
 
 const timerRef = useTemplateRef('timer')
 const raceContext = useRaceContext()
-watch(() => raceContext.currentRound.id, () => {
-  timerRef.value?.unblock()
+watch(() => raceContext.roundStarted, (value) => {
+  if(!value)
+    timerRef.value?.unblock()
 })
 
 const emit = defineEmits(['scramble-clicked'])
@@ -37,17 +37,17 @@ function onScrambleClick() {
     </div>
     <div class="grow flex flex-col justify-between relative">
       <div class="scramble mx-3 text-center">
-        <span v-if="raceContext.currentRound.scramble" :class="[raceContext.eventContext.scrambleSize]"
+        <span v-if="!raceContext.session!.generateScrambles" class="text-xl">Hand scramble</span>
+        <span v-else-if="raceContext.scramblesGenerating" class="text-xl">Generating...</span>
+        <span v-else :class="[raceContext.session!.selectedEvents[side].scrambleClasses]"
           @touchend="onScrambleClick">{{
-            raceContext.currentRound.scramble }}</span>
-        <span v-else-if="!raceContext.eventContext.generateScramble" class="text-xl">Hand scramble</span>
-        <span v-else class="text-xl">Generating...</span>
+            raceContext.currentRound.scramble[side] }}</span>
       </div>
-      <VirtualTimer :prev-round-solve="last(raceContext.rounds)?.solves[side]"
-        class="grow flex justify-center items-center" @timer-started="raceContext.currentRound.roundStarted = true" @timer-stopped="(e) => raceContext.recordSolve(side, e)"
+      <VirtualTimer :prev-round-solve="raceContext.previousRound?.solves[side]"
+        class="grow flex justify-center items-center" @timer-started="raceContext.roundStarted = true" @timer-stopped="(e) => raceContext.recordSolve(side, e)"
         ref="timer" />
-      <StatsCollapse :blocked="!!timerRef?.isBusy" :solves="raceContext.rounds.map(r => r.solves[side]!)"
-        :stats="raceContext.stats[side].computedStats" ref="collapse" />
+      <StatsCollapse :blocked="raceContext.roundStarted" :solves="raceContext.session!.completedRounds.map(r => r.solves[side]!)"
+        :stats="raceContext.session!.stats[side].computedStats" ref="collapse" />
     </div>
   </div>
 </template>

@@ -7,12 +7,13 @@ const raceContext = useRaceContext();
 </script>
 
 <template>
-  <div id="solves-page">
-    <div class="player2 flex flex-col overflow-hidden">
+  <div id="solves-page" class="grid grid-rows-[1fr_auto_1fr] h-svh w-full">
+    <div v-if="raceContext.storeLoading" class="player2 flex items-center justify-center">Loading...</div>
+    <div v-else class="player2 flex flex-col overflow-hidden">
       <div class="p-1 text-center text-lg font-semibold border-b-1 border-neutral-600">SOLVES</div>
       <ol class="grow solves-list list-inside list-decimal overflow-scroll">
-        <li v-for="round in raceContext.rounds" :key="round.id" class="solves-list-item border-b-1 p-1 border-neutral-600"><span
-            class="mx-1 font-semibold">{{ toString(round.solves.player2!) }}</span> {{ round.scramble }}</li>
+        <li v-for="(round, idx) in raceContext.session?.completedRounds" :key="idx" class="solves-list-item border-b-1 p-1 border-neutral-600"><span
+            class="mx-1 font-semibold">{{ toString(round.solves.player2!) }}</span> {{ round.scramble.player2 }}</li>
       </ol>
     </div>
     <div class="divider-custom">
@@ -22,11 +23,12 @@ const raceContext = useRaceContext();
         </RouterLink>
       </div>
     </div>
-    <div class="flex flex-col overflow-hidden">
+    <div v-if="raceContext.storeLoading" class="flex items-center justify-center">Loading...</div>
+    <div v-else class="flex flex-col overflow-hidden">
       <div class="p-1 text-center text-lg font-semibold border-b-1 border-neutral-600">SOLVES</div>
       <ol class="grow solves-list list-inside list-decimal overflow-scroll">
-        <li v-for="round in raceContext.rounds" :key="round.id" class="solves-list-item border-b-1 p-1 border-neutral-600"><span
-            class="mx-1 font-semibold">{{ toString(round.solves.player1!) }}</span> {{ round.scramble }}</li>
+        <li v-for="(round, idx) in raceContext.session?.completedRounds" :key="idx" class="solves-list-item border-b-1 p-1 border-neutral-600"><span
+            class="mx-1 font-semibold">{{ toString(round.solves.player1!) }}</span> {{ round.scramble.player1 }}</li>
       </ol>
     </div>
   </div>

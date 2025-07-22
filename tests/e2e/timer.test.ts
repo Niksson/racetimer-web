@@ -2,6 +2,7 @@ import { test, expect } from '@playwright/test'
 import { startTouchingElement, stopTouchingElement, tapElement } from './helpers/touch'
 import { locateStats } from './helpers/statsCollapse'
 import { locateTimer, startTimer, stopTimer } from './helpers/timer'
+import { locateMenu } from './helpers/menu'
 
 test.describe("Timer logic", () => {
   test.beforeEach(async ({page}) => {
@@ -47,20 +48,20 @@ test.describe("Timer logic", () => {
   test('middle buttons must not be visible until round is completed', async ({page}) => {
     const player1Timer = await locateTimer(page, 'player1')
     const player2Timer = await locateTimer(page, 'player2')
-    const newRaceButton = page.getByRole('button', {name: 'New race'})
+    const menuButton  = await locateMenu(page)
     const penaltyButton = page.getByRole('button', {name: 'Penalty'})
 
     await startTimer(player1Timer, 1)
     await page.waitForTimeout(1000) // wait for 1 second
     await stopTimer(player1Timer, 1)
-    expect(newRaceButton).not.toBeVisible()
+    expect(menuButton).not.toBeVisible()
     expect(penaltyButton).not.toBeVisible()
 
     await startTimer(player2Timer, 2)
     await page.waitForTimeout(1000) // wait for 1 second
     await stopTimer(player2Timer, 2)
     await page.waitForTimeout(100) // wait for a short time to ensure UI updates
-    expect(newRaceButton).toBeVisible()
+    expect(menuButton).toBeVisible()
     expect(penaltyButton).toBeVisible()
   })
 

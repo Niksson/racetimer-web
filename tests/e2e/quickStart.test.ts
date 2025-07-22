@@ -1,9 +1,10 @@
 import { test, expect } from '@playwright/test';
-import { simulateRound, startAndStopTimer } from './helpers/timer';
-import { puzzlesMap } from '../../src/lib/puzzlesMap';
+import { simulateRound } from './helpers/timer';
+import { eventsMap } from '../../src/lib/eventsMap';
 import { locateElement } from './helpers/element';
+import { openMenu } from './helpers/menu';
 
-test.describe('New race modal functionality', () => {
+test.describe('Quick start modal functionality', () => {
   test.beforeEach(async ({ page }) => {
     await page.goto('/')
     await page.waitForTimeout(100)
@@ -17,20 +18,13 @@ test.describe('New race modal functionality', () => {
     const score = await locateElement(page, 'player1', '.score');
     expect(await score.textContent()).toMatch(/1\s*:\s*0/);
 
-    const newRaceButton = page.getByRole('button', { name: 'New race' });
+    await openMenu(page);
+    const newRaceButton = page.locator('button#quick-start');
     await newRaceButton.click();
 
-    const eventName = Object.values(puzzlesMap)[1].displayName;
+    const eventName = Object.values(eventsMap)[1].displayName;
     const eventSelectionButton = page.getByRole('button', { name: eventName });
     await eventSelectionButton.click();
     expect(await score.textContent()).toMatch(/0\s*:\s*0/);
-  })
-
-  test('starting a new race is not possible before both players complete the round', async ({ page }) => {
-    const player1Timer = await locateElement(page, 'player1', '.timer');
-    await startAndStopTimer(player1Timer, 100);
-
-    const newRaceButton = page.getByRole('button', { name: 'New race' });
-    expect(newRaceButton).not.toBeVisible();
   })
 })

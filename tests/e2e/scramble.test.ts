@@ -1,6 +1,7 @@
 import {test, expect} from '@playwright/test';
 import { locateElement } from './helpers/element';
-import { puzzlesMap } from '../../src/lib/puzzlesMap';
+import { eventsMap } from '../../src/lib/eventsMap';
+import { openMenu } from './helpers/menu';
 
 test.describe('Scramble display', () => {
   test.beforeEach(async ({ page }) => {
@@ -28,12 +29,13 @@ test.describe('Scramble display', () => {
   test('changing to puzzle without generating a scramble shows corresponding message', async ({ page }) => {
     const scramble = await locateElement(page, 'player1', '.scramble');
 
-    const newRaceButton = page.getByRole('button', { name: 'New race' });
+    await openMenu(page);
+    const newRaceButton = page.locator('button#quick-start');
     await newRaceButton.click();
 
-    const noScramblePuzzle = Object.values(puzzlesMap).find(puzzle => !puzzle.generateScramble);
-    expect(noScramblePuzzle).toBeDefined();
-    const puzzleSelectionButton = page.getByRole('button', { name: noScramblePuzzle!.displayName });
+    const noScrambleEvent = Object.values(eventsMap).find(event => !event.generateScramble);
+    expect(noScrambleEvent).toBeDefined();
+    const puzzleSelectionButton = page.getByRole('button', { name: `${noScrambleEvent!.displayName} (No Scramble)` });
     await puzzleSelectionButton.click();
 
     expect(await scramble.textContent()).toContain('Hand scramble');

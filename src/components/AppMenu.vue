@@ -86,10 +86,10 @@
         <div class="flex justify-around">
           <EventSelector side="player1" v-model="sessionCreationOptions.selectedEvents.player1"
             @event-changed="sessionCreationOptions.selectedEvents.player2 = sessionCreationOptions.selectedEvents.player1"
-            class="py-8 sm:w-36 md:w-44 w-24" />
+            class="py-8 sm:w-36 md:w-44 w-28" />
           <div class="divider divider-horizontal text-sm">vs</div>
           <EventSelector side="player2" v-model="sessionCreationOptions.selectedEvents.player2"
-            class="py-8 sm:w-36 md:w-44 w-24" />
+            class="py-8 sm:w-36 md:w-44 w-28" />
         </div>
         <fieldset class="fieldset mt-2">
           <label class="lable">

@@ -7,7 +7,6 @@
       <template v-else>
         <div><span class="cubing-icon text-xl" :class="selectedEvent.eventIcon" /></div>
         <div class="text-xs">{{ selectedEvent.displayName }}</div>
-        <ChevronDown class="w-5 h-5" />
       </template>
     </summary>
     <ul class="dropdown-content menu bg-base-300 mt-1 w-60 max-h-40 flex-nowrap overflow-scroll">
@@ -23,7 +22,7 @@
 </template>
 
 <script setup lang="ts">
-import { ChevronDown, Check } from 'lucide-vue-next';
+import { Check } from 'lucide-vue-next';
 import { eventsMap } from '../lib/eventsMap';
 import { computed, ref } from 'vue';
 import type { Side } from '../models/Side';

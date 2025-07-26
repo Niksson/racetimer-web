@@ -23,6 +23,7 @@ dev-dist
 *.njsproj
 *.sln
 *.sw?
+.github/instructions/**
 
 # Playwright
 /test-results/

@@ -56,9 +56,15 @@
           </div>
         </li>
       </ul>
-      <button class="btn bg-base-300 w-full" @click="aboutModalOpen = true">
+      <div class="flex gap-0.5 p-2 pt-0">
+      <button class="btn rounded-lg bg-base-300 grow" @click="aboutModalOpen = true">
         <Info class="w-4 h-4" />About
       </button>
+      <button class="btn bg-base-300" @click="shareModalOpen = true">
+        <Share class="w-4 h-4" />Share
+      </button>
+
+      </div>
     </div>
     <ModalDialog v-model="deleteDialog.isRevealed.value">
       <h3>Are you sure?</h3>
@@ -114,15 +120,21 @@
         <RaceTimerLogo class="w-14 h-full fill-base-content stroke-base-content" />
         <div class="font-bold text-xl">RaceTimer</div>
       </div>
-      <h2 class="text-lg">v0.3.1</h2>
+      <h2 class="text-lg">v0.3.2</h2>
         <p class="mt-3">Inspired by <a href="https://github.com/maximxD/RaceTimer" class="link">RaceTimer by Maxim Ilin</a></p>
         <p class="mt-3"><a href="https://github.com/Niksson/racetimer-web" class="link flex gap-1 justify-center items-center"><Github class="w-3 h-3 fill-base-content stroke-base-content"/>GitHub</a></p>
+    </ModalDialog>
+    <ModalDialog class="text-center" id="shareModal" backdrop v-model="shareModalOpen">
+      <h2 class="text-lg">Share using QR code</h2>
+      <img class="block mt-2 mx-auto w-30 h-30" src="../assets/share-qr.gif" alt="QR Code for sharing RaceTimer" />
+      <div class="divider">OR</div>
+      <button class="w-full btn btn-neutral" @click="onNativeShare"><Share class="w-4 h-4"/> Share</button>
     </ModalDialog>
   </div>
 </template>
 
 <script setup lang="ts">
-import { Plus, Zap, Info, X } from 'lucide-vue-next';
+import { Plus, Zap, Info, X, Share } from 'lucide-vue-next';
 import Github from './Icons/Github.vue';
 import RaceTimerLogo from './Icons/RaceTimerLogo.vue';
 import { ref } from 'vue';
@@ -161,6 +173,14 @@ function onQuickStartEventChosen(event: string) {
     generateScrambles: eventsMap[event].generateScramble
   })
   quickStartModalOpen.value = false
+}
+
+const shareModalOpen = ref(false)
+function onNativeShare() {
+  navigator.share({
+    title: 'RaceTimer - Challenge your friend to a speedcubing race!',
+    url: 'https://racetimer.nikolaimasson.com'
+  })
 }
 
 const newRaceModalOpen = ref(false)

@@ -120,7 +120,7 @@
         <RaceTimerLogo class="w-14 h-full fill-base-content stroke-base-content" />
         <div class="font-bold text-xl">RaceTimer</div>
       </div>
-      <h2 class="text-lg">v0.3.2</h2>
+      <h2 class="text-lg">v{{ appVersion }}</h2>
         <p class="mt-3">Inspired by <a href="https://github.com/maximxD/RaceTimer" class="link">RaceTimer by Maxim Ilin</a></p>
         <p class="mt-3"><a href="https://github.com/Niksson/racetimer-web" class="link flex gap-1 justify-center items-center"><Github class="w-3 h-3 fill-base-content stroke-base-content"/>GitHub</a></p>
     </ModalDialog>
@@ -150,6 +150,7 @@ import ModalDialog from './ModalDialog.vue';
 
 const { storeLoading, sessionMetaList: sessions, session: activeSession } = storeToRefs(useRaceContext());
 const { selectSession, removeSession, startNewSession } = useRaceContext();
+const appVersion = __APP_VERSION__
 
 const aboutModalOpen = ref(false);
 

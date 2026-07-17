@@ -1,13 +1,19 @@
 name: Deploy to Cloudflare Pages
 
 on:
-  push:
-    branches:
-      - dev 
-      - main
-    paths-ignore:
-      - .github/**
+  workflow_call:
+    inputs:
+      ref:
+        description: Branch or tag to deploy
+        required: true
+        type: string
   workflow_dispatch:
+    inputs:
+      ref:
+        description: Branch or tag to deploy
+        required: true
+        default: main
+        type: string
 
 jobs:
   deploy:
@@ -19,8 +25,10 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
+        with:
+          ref: ${{ inputs.ref }}
 
-      - name: Insstall pnpm
+      - name: Install pnpm
         uses: pnpm/action-setup@v4
         with:
           version: 10
@@ -32,7 +40,7 @@ jobs:
           cache: 'pnpm'
 
       - name: Install dependencies
-        run: pnpm install
+        run: pnpm install --frozen-lockfile
 
       - name: Build the app
         run: pnpm build

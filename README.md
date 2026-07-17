@@ -1,4 +1,5 @@
 # RaceTimer Web
+[![ko-fi](https://ko-fi.com/img/githubbutton_sm.svg)](https://ko-fi.com/P5P21IF4ZV)
 
 ## Challenge your friend to a speedcubing race!
 

@@ -121,6 +121,7 @@
         <div class="font-bold text-xl">RaceTimer</div>
       </div>
       <h2 class="text-lg">v{{ appVersion }}</h2>
+      <a class="link" href="https://ko-fi.com/P5P21IF4ZV">Buy me a 🍺</a>
         <p class="mt-3">Inspired by <a href="https://github.com/maximxD/RaceTimer" class="link">RaceTimer by Maxim Ilin</a></p>
         <p class="mt-3"><a href="https://github.com/Niksson/racetimer-web" class="link flex gap-1 justify-center items-center"><Github class="w-3 h-3 fill-base-content stroke-base-content"/>GitHub</a></p>
     </ModalDialog>

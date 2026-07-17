@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { computed, ref } from 'vue'
-import { ChevronUp, ChevronDown } from 'lucide-vue-next'
+import { ChevronUp, ChevronDown } from '@lucide/vue'
 import StatsList from './StatsList.vue'
 import type { ComputedStats } from '../models/StatsContext'
 import type { Solve } from '../models/Solve';

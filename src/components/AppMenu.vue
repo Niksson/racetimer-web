@@ -134,7 +134,7 @@
 </template>
 
 <script setup lang="ts">
-import { Plus, Zap, Info, X, Share } from 'lucide-vue-next';
+import { Plus, Zap, Info, X, Share } from '@lucide/vue';
 import Github from './Icons/Github.vue';
 import RaceTimerLogo from './Icons/RaceTimerLogo.vue';
 import { ref } from 'vue';

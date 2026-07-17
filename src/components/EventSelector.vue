@@ -22,7 +22,7 @@
 </template>
 
 <script setup lang="ts">
-import { Check } from 'lucide-vue-next';
+import { Check } from '@lucide/vue';
 import { eventsMap } from '../lib/eventsMap';
 import { computed, ref } from 'vue';
 import type { Side } from '../models/Side';

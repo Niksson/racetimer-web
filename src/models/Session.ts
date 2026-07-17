@@ -80,7 +80,7 @@ export async function getAllSessionMeta(): Promise<SessionMeta[]> {
   const sessionMetaKeys = keysList.filter((key) => key.toString().match(/session-meta-.*/))
   const sessionMetas = await getMany<SessionMeta>(sessionMetaKeys)
 
-  return sessionMetas
+  return sessionMetas.filter((sessionMeta): sessionMeta is SessionMeta => sessionMeta !== undefined)
 }
 
 export async function getSession(sessionId: string): Promise<Session> {

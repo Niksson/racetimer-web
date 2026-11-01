@@ -51,6 +51,9 @@ jobs:
     needs: release
     if: needs.release.outputs.released == 'true'
     uses: ./.github/workflows/deploy.yaml
+    permissions:
+      contents: read
+      deployments: write
     with:
       ref: ${{ github.ref_name }}
     secrets: inherit

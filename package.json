@@ -20,7 +20,7 @@
     "@tailwindcss/vite": "^4.3.3",
     "@vueuse/core": "^14.3.0",
     "@xstate/vue": "^5.0.1",
-    "cubing": "^0.63.3",
+    "cubing": "^0.66.1",
     "dayjs": "^1.11.21",
     "idb-keyval": "^6.3.0",
     "pinia": "^4.0.2",
